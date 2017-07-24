@@ -1,0 +1,35 @@
+<div class="fs-section fs-constants closed">
+    <h3 class="fs-title">Constants<span class="fs-openCloseBtn"></span></h3>
+    <div class="fs-content">
+        <span class="fs-label">errors:</span>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+                <?php foreach ($this->constErrors as $key => $value) { ?>
+                <tr>
+                    <td><?php echo $key; ?></td>
+                    <td><?php echo $value ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <span class="fs-label">sql:</span>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+                <?php foreach ($this->constSql as $key => $value) { ?>
+                <tr>
+                    <td><?php echo $key; ?></td>
+                    <td><?php echo $value ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>

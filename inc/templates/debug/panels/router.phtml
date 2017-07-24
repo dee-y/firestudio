@@ -1,0 +1,43 @@
+<div class="fs-section fs-router closed">
+    <h3 class="fs-title">Router<span class="fs-openCloseBtn"></span></h3>
+    <div class="fs-content">
+
+        <span class="fs-label"><strong>Matched Route: </strong> <?php echo $this->resolvedMatchedRoute; ?></span>
+        <span class="fs-label"><strong>Controller: </strong> <?php echo $this->resolvedController; ?></span>
+        <span class="fs-label"><strong>Method: </strong>  <?php echo $this->resolvedMethod; ?></span>
+        <span class="fs-label"><strong>Route Variables: </strong> <?php  if (empty($this->resolvedRouteVars)) { echo 'false'; } ?></span>
+        <?php if (!empty($this->resolvedRouteVars)) { ?>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+                <?php foreach ($this->resolvedRouteVars as $key => $value) { ?>
+                <tr>
+                    <td><?php echo $key; ?></td>
+                    <td><?php echo $value ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <?php } ?>
+        <span class="fs-label"><strong>Configured Routes: </strong></span>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Path</th>
+                    <th>Controller</th>
+                    <th>Method</th>
+                </tr>
+                <?php foreach ($this->routeConfig as $path => $config) { ?>
+                <tr>
+                    <td><?php echo $path; ?></td>
+                    <td><?php echo $config->controller; ?></td>
+                    <td><?php echo $config->method; ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
