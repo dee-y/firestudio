@@ -1,2 +1,2 @@
 # firestudio
-A Comprehensive Web Studio for Small to Medium Sided Businesses
+FireStudio is opensource software that provides users a centralized platform to share their data and content across the web.
