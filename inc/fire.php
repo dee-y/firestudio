@@ -89,7 +89,7 @@ class fire {
 
     protected function _initDbConnection() {
         // try {
-            $db = new PDO('sqlite:' . __DIR__ . '/../inc/db/firestudio.sqlite');
+            $db = '';
             $this->injector->set(self::INJECTOR_DATABASE, $db);
             $this->_db = $this->injector->get(self::INJECTOR_DATABASE);
         // } catch(Exception $e) {
