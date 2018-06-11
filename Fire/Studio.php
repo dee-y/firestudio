@@ -11,6 +11,8 @@ use \Fire\Bug\Panel\Config as FireBugPanelConfig;
 use \Fire\Sql;
 use \Fire\Studio\Router;
 use \Fire\Bug\Panel\Router as FireBugPanelRouter;
+use \Fire\Studio\View;
+use \Fire\Bug\Panel\View as FireBugPanelView;
 use \PDO;
 
 class Studio
@@ -22,11 +24,14 @@ class Studio
     const INJECTOR_CONFIG = 'fire.studio.config';
     const INJECTOR_DATABASE = 'fire.studio.db';
     const INJECTOR_ROUTER = 'fire.studio.router';
+    const INJECTOR_VIEW = 'fire.studio.view';
 
     private $_config;
     private $_db;
     private $_debug;
     private $_router;
+    private $_view;
+    private $_modules;
 
     public function __construct($appJsonConfig)
     {
@@ -35,7 +40,8 @@ class Studio
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
         $this->_initRouter();
-        // $this->_checkInstall();
+        $this->_initView();
+        $this->_modules = [];
     }
 
     public function addConfig($pathToJsonConfig)
@@ -46,16 +52,16 @@ class Studio
 
     public function addModule(Module $module)
     {
-
+        $module->init();
+        $this->_modules[] = $module;
     }
 
     public function run()
     {
         $this->_initModules();
-        $this->_initPageDebug();
-        // $this->_resolveRoute();
-        // $this->_initController();
-        // $this->_closeDbConnection();
+        $this->_setupRoutes();
+        $this->_resolveRoute();
+        $this->_invokeController();
     }
 
     /**
@@ -84,7 +90,7 @@ class Studio
         $this->_config = $this->injector->get(self::INJECTOR_CONFIG);
 
         //setup application configurations
-        $defaultAppConfig = __DIR__ . '/Application/Config/application.json';
+        $defaultAppConfig = __DIR__ . '/Studio/Application/Config/application.json';
         $this->addConfig($defaultAppConfig);
         $this->addConfig($appConfig);
 
@@ -161,40 +167,13 @@ class Studio
         $this->_debug->addPanel(new FireBugPanelRouter());
     }
 
-    // private function _checkInstall()
-    // {
-    //     $hasConfig = !empty($this->_config);
-    //     $hasDbConnection = !empty($this->_db);
-    //     $hasDbTables = false;
-    //
-    //     //if not installed properly
-    //     if (!($hasConfig && $hasDbConnection && $hasDbTables)) {
-    //         $adminInstallRoute = (isset($this->_config['routes']['admin.install']))
-    //             ? $this->_config['routes']['admin.install']
-    //             : '/admin/install/:step';
-    //         $this->_router->when($adminInstallRoute, 'firestudio\controllers\installation', 'install');
-    //         $this->_router->resolve();
-    //         if ($this->_router->getMatchedRoute() !== $adminInstallRoute) {
-    //             $route = str_replace(':step', '1', $adminInstallRoute);
-    //             $this->_router->redirect($route, 302);
-    //         }
-    //     }
-    // }
-    //
-    // private function _initPageDebug()
-    // {
-    //     debugger(!empty($this->_config['debug']));
-    //     if (!empty($this->_config['debug'])) {
-    //         ini_set('display_errors', 1);
-    //         ini_set('display_startup_errors', 1);
-    //         error_reporting(E_ALL);
-    //     }
-    // }
-    //
-    // private function _initPlugins()
-    // {
-    //
-    // }
+    private function _initView()
+    {
+        $this->injector->set(self::INJECTOR_VIEW, new View());
+        $this->_view = $this->injector->get(self::INJECTOR_VIEW);
+
+        $this->_debug->addPanel(new FireBugPanelView());
+    }
 
     /**
      * ================================================================================
@@ -202,38 +181,37 @@ class Studio
      * ================================================================================
      */
 
-    // private function _resolveRoute()
-    // {
-    //     $this->_resolvedRoute = $this->_router->resolve();
-    //     $this->_debug->routeConfig = $this->_router->getRouteConfig();
-    //     $this->_debug->resolvedMatchedRoute = $this->_router->getMatchedRoute();
-    //     $this->_debug->resolvedController = $this->_resolvedRoute->controller;
-    //     $this->_debug->resolvedMethod = $this->_resolvedRoute->method;
-    //     $this->_debug->resolvedRouteVars = $this->_router->getRouteVars();
-    // }
+    private function _initModules()
+    {
+        $config = $this->_config->getConfig();
+        $modules = (isset($config->modules)) ? $config->modules : [];
+        foreach ($modules as $module) {
+            $addModule = new $module();
+            $this->addModule($addModule);
+        }
+    }
 
-    // private function _initController()
-    // {
-    //
-    // }
-    //
-    // private function _closeDbConnection()
-    // {
-    //     $this->injector->set(self::INJECTOR_DATABASE, null);
-    // }
+    private function _setupRoutes()
+    {
+        $config = $this->_config->getConfig();
+        $routes = (isset($config->routes)) ? $config->routes : [];
+        foreach ($routes as $route) {
+            $this->_router->when($route->path, $route->controller, $route->method);
+        }
+    }
 
+    private function _resolveRoute()
+    {
+        $this->_router->resolve();
+    }
 
-    /**
-     * ================================================================================
-     * Misc Processes
-     * ================================================================================
-     */
-
-    // private function _runInstall()
-    // {
-    //     //copy config file and replace params
-    //     $db = $this->injector->get('db');
-    //     //$db->exec('CREATE TABLE Dogs (Id INTEGER PRIMARY KEY, Breed TEXT, Name TEXT, Age INTEGER)');
-    // }
+    private function _invokeController()
+    {
+        $controllerClass = $this->_router->getController();
+        $method = $this->_router->getMethod();
+        $controller = new $controllerClass();
+        $controller->init();
+        $controller->{$method}();
+    }
 
 }

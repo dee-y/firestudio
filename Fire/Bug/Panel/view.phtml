@@ -1,0 +1,14 @@
+<?php
+    $templates = $this->getTemplates();
+?>
+
+<?php if ($templates) { ?>
+    <?php foreach ($templates as $id => $template) { ?>
+        <span class="fs-label"><strong>Template ID: </strong><?php echo $id; ?></span>
+        <span class="fs-label">
+            <span class="fs-pre-wrap">wrap</span>
+            <pre class="debugger fs-dark"><?php echo htmlspecialchars($template); ?></pre>
+        </span>
+        <hr class="fs-hr">
+    <?php } ?>
+<?php } ?>

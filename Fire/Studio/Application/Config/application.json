@@ -1,4 +1,6 @@
 {
     "debug": false,
+    "pdo": false,
+    "modules": [],
     "routes": {}
 }

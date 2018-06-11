@@ -2,51 +2,47 @@
 
 namespace Fire\Studio;
 
-use Fire\Studio;
-use Fire\FireStudioException;
+use \Mustache_Engine;
+use \Fire\Studio;
 
 class View
 {
 
     use \Fire\Studio\Injector;
 
+    private $_mustache;
+
+    private $_templates = [];
+
     public function __construct()
     {
-        $this->_initInjector();
+        $this->_fireInjector();
+        $this->_debug = $this->injector->get(Studio::INJECTOR_DEBUG_PANEL);
+        $this->_mustache = new Mustache_Engine();
+        $this->_templates = [];
     }
 
-    public function assign(array $model)
+    public function loadTemplate($id, $pathToTemplate)
     {
-        foreach ($model as $property => $value) {
-            $this->{$property} = $value;
-        }
+        $template = file_get_contents($pathToTemplate);
+        $this->_templates[$id] = $template;
     }
 
-    public function render($template, $return = false)
+    public function getTemplate($id)
     {
-        if (!file_exists($template)) {
-            $errors = $this->injector->get(fire::INJECTOR_ERRORS);
-            $msg = $errors['view.templateNotFound'];
-            throw new error(sprintf($msg, $template));
-        }
-        ob_start();
-        include $template;
-        ob_end_flush();
+        return (isset($this->_templates[$id])) ? $this->_templates[$id] : '';
     }
 
-    public function head()
+    public function getTemplates()
     {
-
+        return $this->_templates;
     }
 
-    public function footer()
+    public function render($template, $model = [])
     {
-        $debugPanel = $this->injector->get(fire::INJECTOR_DEBUG_PANEL);
-        $config = $this->injector->get(fire::INJECTOR_CONFIG);
-
-        if (!empty($config['debug'])) {
-            $debugPanel->renderPanel();
-        }
+        $model['debugPanel'] = $this->_debug->render(false);
+        $mustacheTemplate = $this->_templates[$template];
+        return $this->_mustache->render($mustacheTemplate, $model);
     }
 
 }
