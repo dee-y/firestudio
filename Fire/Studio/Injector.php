@@ -2,14 +2,14 @@
 
 namespace Fire\Studio;
 
-use Fire\Studio\Helper\Injector as InjectorHelper;
+use Fire\Injector as FireInjector;
 
 trait Injector {
 
     public $injector;
 
-    private function _initInjector() {
-        $this->injector = InjectorHelper::instance();
+    private function _fireInjector() {
+        $this->injector = FireInjector::instance();
     }
 
 }

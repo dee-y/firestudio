@@ -1,0 +1,58 @@
+<?php
+$routeDebug = $this->getRouterDebug();
+?>
+
+<span class="fs-label">
+    <strong>Matched Route: </strong>
+    <?php echo ($routeDebug->route) ? $routeDebug->route : 'false'; ?>
+</span>
+<span class="fs-label">
+    <strong>Controller: </strong>
+    <?php echo ($routeDebug->controller) ? $routeDebug->controller: 'false'; ?>
+</span>
+<span class="fs-label">
+    <strong>Method: </strong>
+    <?php echo ($routeDebug->method) ? $routeDebug->method : 'false'; ?>
+</span>
+<span class="fs-label">
+    <strong>Route Variables: </strong>
+    <?php  if (empty($routeDebug->variables)) { echo 'false'; } ?>
+</span>
+<?php if (!empty($routeDebug->variables)) { ?>
+<table>
+    <tbody>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <?php foreach ($routeDebug->variables as $key => $value) { ?>
+        <tr>
+            <td><?php echo $key; ?></td>
+            <td><?php echo $value ?></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
+<?php } ?>
+<span class="fs-label">
+    <strong>Configured Routes: </strong>
+    <?php  if (empty($routeDebug->routes)) { echo 'false'; } ?>
+</span>
+<?php if (!empty($routeDebug->routes)) { ?>
+<table>
+    <tbody>
+        <tr>
+            <th>Path</th>
+            <th>Controller</th>
+            <th>Method</th>
+        </tr>
+        <?php foreach ($routeDebug->routes as $path => $config) { ?>
+        <tr>
+            <td><?php echo $path; ?></td>
+            <td><?php echo $config->controller; ?></td>
+            <td><?php echo $config->method; ?></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
+<?php } ?>

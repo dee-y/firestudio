@@ -1,0 +1,22 @@
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+        </tr>
+        <?php foreach ($this->getInjector() as $name => $value) { ?>
+        <tr>
+            <td style="vertical-align: top;"><?php echo $name; ?></td>
+            <td>
+            <?php
+                if (is_object($value)) echo 'Object "' . get_class($value) . '"';
+                else if (is_array($value)) echo 'Array';
+                else if (is_bool($value) && $value) echo 'true';
+                else if (is_bool($value) && !$value) echo 'false';
+                else if (is_null($value)) echo 'NULL';
+            ?>
+            </td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>

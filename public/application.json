@@ -1,0 +1,10 @@
+{
+    "debug": true,
+    "pdo": {
+        "adapter": "sqlite",
+        "location": "/home/johnsonj/Projects/UA1/Fire/firestudio/public/firestudio.db"
+    },
+    "modules": {
+        "admin": "Fire\\Studio\\Application\\Module\\Admin"
+    }
+}
