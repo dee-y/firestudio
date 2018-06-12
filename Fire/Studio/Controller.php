@@ -20,7 +20,7 @@ class Controller {
 
     public function init()
     {
-        
+
     }
 
     public function addConfig($pathToConfig)
@@ -41,6 +41,6 @@ class Controller {
 
     public function render($layout, $model)
     {
-        $this->_view->render($layout, $model);
+        return $this->_view->render($layout, $model);
     }
 }

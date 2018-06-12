@@ -4,20 +4,19 @@ namespace Fire\Studio\Application\Module;
 
 use \Fire\Studio\Module;
 
-class Admin extends Module {
-
+class Application extends Module {
     use \Fire\Studio\Injector;
 
-    const TEMPLATE_ADMIN_LAYOUT = 'fire.studio.admin.layout';
+    const TEMPLATE_APPLICATION_LAYOUT = 'fire.studio.error.layout';
 
     public function init()
     {
-        $this->addConfig(__DIR__ . '/Admin/Config/module.json');
+        $this->addConfig(__DIR__ . '/Application/Config/module.json');
         $this->_fireInjector();
         debugger($this->injector->get('fire.studio.config')->getConfig());
         $this->loadTemplate(
-            self::TEMPLATE_ADMIN_LAYOUT,
-            __DIR__ . '/Admin/Template/layouts/standard-layout.phtml'
+            self::TEMPLATE_APPLICATION_LAYOUT,
+            __DIR__ . '/Application/Template/layouts/standard-layout.phtml'
         );
     }
 

@@ -196,7 +196,7 @@ class Studio
         $config = $this->_config->getConfig();
         $routes = (isset($config->routes)) ? $config->routes : [];
         foreach ($routes as $route) {
-            $this->_router->when($route->path, $route->controller, $route->method);
+            $this->_router->when($route->path, $route->controller, $route->action);
         }
     }
 
@@ -208,10 +208,12 @@ class Studio
     private function _invokeController()
     {
         $controllerClass = $this->_router->getController();
-        $method = $this->_router->getMethod();
-        $controller = new $controllerClass();
-        $controller->init();
-        $controller->{$method}();
+        $action = $this->_router->getAction();
+        if ($controllerClass && $action) {
+            $controller = new $controllerClass();
+            $controller->init();
+            $controller->{$action}();
+        }
     }
 
 }

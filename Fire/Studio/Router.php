@@ -7,7 +7,7 @@ class Router {
     private $_currentRoute;
     private $_matchedRoute;
     private $_controller;
-    private $_method;
+    private $_action;
     private $_routeVars;
 
     public function __construct()
@@ -15,19 +15,19 @@ class Router {
         $this->_routes = [];
         $this->_matchedRoute = false;
         $this->_controller = false;
-        $this->_method = false;
+        $this->_action = false;
         $this->_routeVars = [];
     }
 
-    public function when($path, $controller, $method)
+    public function when($path, $controller, $action)
     {
-        $this->_setRoute($path, $controller, $method);
+        $this->_setRoute($path, $controller, $action);
         return $this;
     }
 
-    public function otherwise($controller, $method)
+    public function otherwise($controller, $action)
     {
-        $this->_setRoute('*', $controller, $method);
+        $this->_setRoute('*', $controller, $action);
         return $this;
     }
 
@@ -51,9 +51,9 @@ class Router {
         return $this->_controller;
     }
 
-    public function getMethod()
+    public function getAction()
     {
-        return $this->_method;
+        return $this->_action;
     }
 
     public function getVariables($routeParam = null)
@@ -68,11 +68,11 @@ class Router {
         return false;
     }
 
-    private function _setRoute($path, $controller, $method)
+    private function _setRoute($path, $controller, $action)
     {
         $this->_routes[$path] = (object) [
             'controller' => $controller,
-            'method' => $method
+            'action' => $action
         ];
     }
 
@@ -83,7 +83,7 @@ class Router {
         if (array_key_exists($currentRoute, $routeConfig)) {
             $this->_matchedRoute = $currentRoute;
             $this->_controller = $routeConfig[$currentRoute]->controller;
-            $this->_method = $routeConfig[$currentRoute]->method;
+            $this->_action = $routeConfig[$currentRoute]->action;
             return true;
         } else {
             //remove url query params and parse route into its parts
@@ -113,7 +113,7 @@ class Router {
                     if ($routeMatch) {
                         $this->_matchedRoute = $path;
                         $this->_controller = $route->controller;
-                        $this->_method = $route->method;
+                        $this->_action = $route->action;
                         $matchedRoute = explode('/', substr($this->_matchedRoute, 1));
                         $i = 0;
                         foreach ($matchedRoute as $matchedRoutePart) {
@@ -129,7 +129,7 @@ class Router {
             if (array_key_exists('*', $routeConfig)) {
                 $this->_matchedRoute = '*';
                 $this->_controller = $routeConfig['*']->controller;
-                $this->_method = $routeConfig['*']->method;
+                $this->_action = $routeConfig['*']->action;
                 return true;
             } else {
                 return false;

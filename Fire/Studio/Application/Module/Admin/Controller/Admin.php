@@ -15,7 +15,7 @@ class Admin extends Controller {
             self::TEMPLATE_ADMIN_DASHBOARD,
             __DIR__ . '/../Template/admin/dashboard.phtml'
         );
-        $this->render(
+        echo $this->render(
             AdminModule::TEMPLATE_ADMIN_LAYOUT,
             [
 
