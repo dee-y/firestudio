@@ -17,7 +17,7 @@ class Config extends Panel
      * Constants
      */
     const ID = 'config';
-    const NAME = 'Configuration';
+    const NAME = 'Config';
     const TEMPLATE = '/config.phtml';
 
     private $_config;
@@ -35,5 +35,10 @@ class Config extends Panel
     public function getConfig()
     {
         return $this->_config->getConfig();
+    }
+
+    public function getLoadedConfigFiles()
+    {
+        return $this->_config->getLoadedConfigFiles();
     }
 }

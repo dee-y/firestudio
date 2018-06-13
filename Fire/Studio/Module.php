@@ -23,15 +23,19 @@ class Module {
 
     }
 
-    public function addConfig($pathToConfig)
+    public function loadConfig($pathToConfig)
     {
-        $jsonConfig = file_get_contents($pathToConfig);
-        $this->_config->addJsonConfig($jsonConfig);
+        $this->_config->addConfigFile($pathToConfig);
     }
 
-    public function loadTemplate($id, $pathToTemplate)
+    public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
     {
-        $this->_view->loadTemplate($id, $pathToTemplate);
+        $this->_view->loadTemplate($id, $pathToTemplate, $loadAsPartial);
+    }
+
+    public function loadInlineStyle($pathToCss)
+    {
+        
     }
 
 }

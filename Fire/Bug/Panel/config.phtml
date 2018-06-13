@@ -1,4 +1,42 @@
+<?php
+    $loadedConfigs = $this->getLoadedConfigFiles();
+?>
+<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>LOADED CONFIGS</strong></span>
+<?php if ($loadedConfigs) { ?>
+    <?php foreach ($loadedConfigs as $i => $config) { ?>
+        <span class="fs-label"><strong>Loaded: </strong><?php echo $config->config; ?></span>
+        <span class="fs-label">
+            <?php
+                $traces = $config->trace;
+                foreach ($traces as $index => $trace) {
+                    $traceLine = '#' . $index . ' ';
+                    if (!empty($trace['file'])) {
+                        $traceLine .= $trace['file'];
+                    }
+                    if (!empty($trace['line'])) {
+                        $traceLine .= '(' . $trace['line'] . ') ';
+                    }
+                    if (!empty($trace['class'])) {
+                        $traceLine .= $trace['class'] . '::';
+                    }
+                    $traceLine .= $trace['function'] . '()'
+                        . '<br>';
+                    echo $traceLine;
+                }
+            ?>
+        </span>
+        <span class="fs-label">
+            <span class="fs-pre-wrap">wrap</span>
+            <pre class="debugger fs-dark"><?php echo json_encode(json_decode($config->fileContent), JSON_PRETTY_PRINT) ?></pre>
+        </span>
+        <hr class="fs-hr">
+    <?php } ?>
+<?php } else { ?>
+    <span class="fs-label">No Configs Loaded...</span>
+<?php } ?>
+
+<span class="fs-label" style="text-decoration: underline; margin-top: 25px;"><strong>APP CONFIG</strong></span>
 <span class="fs-label">
     <span class="fs-pre-wrap">wrap</span>
-    <pre class="debugger fs-dark"><?php echo var_dump($this->getConfig()); ?></pre>
+    <pre class="debugger fs-dark"><?php echo json_encode($this->getConfig(), JSON_PRETTY_PRINT); ?></pre>
 </span>

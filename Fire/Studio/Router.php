@@ -6,6 +6,7 @@ class Router {
     private $_routes;
     private $_currentRoute;
     private $_matchedRoute;
+    private $_module;
     private $_controller;
     private $_action;
     private $_routeVars;
@@ -14,20 +15,22 @@ class Router {
     {
         $this->_routes = [];
         $this->_matchedRoute = false;
+        $this->_module = false;
         $this->_controller = false;
         $this->_action = false;
+        $this->_id = false;
         $this->_routeVars = [];
     }
 
-    public function when($path, $controller, $action)
+    public function when($path, $module, $controller, $action, $id = false)
     {
-        $this->_setRoute($path, $controller, $action);
+        $this->_setRoute($path, $module, $controller, $action, $id);
         return $this;
     }
 
-    public function otherwise($controller, $action)
+    public function otherwise($module, $controller, $action, $id = false)
     {
-        $this->_setRoute('*', $controller, $action);
+        $this->_setRoute('*', $module, $controller, $action, $id);
         return $this;
     }
 
@@ -46,6 +49,11 @@ class Router {
         return $this->_matchedRoute;
     }
 
+    public function getModule()
+    {
+        return $this->_module;
+    }
+
     public function getController()
     {
         return $this->_controller;
@@ -54,6 +62,11 @@ class Router {
     public function getAction()
     {
         return $this->_action;
+    }
+
+    public function getId()
+    {
+        return $this->_id;
     }
 
     public function getVariables($routeParam = null)
@@ -68,9 +81,11 @@ class Router {
         return false;
     }
 
-    private function _setRoute($path, $controller, $action)
+    private function _setRoute($path, $module, $controller, $action, $id)
     {
         $this->_routes[$path] = (object) [
+            'id' => $id,
+            'module' => ($module) ? $module : false,
             'controller' => $controller,
             'action' => $action
         ];
@@ -82,8 +97,10 @@ class Router {
         $currentRoute = $_SERVER['REQUEST_URI'];
         if (array_key_exists($currentRoute, $routeConfig)) {
             $this->_matchedRoute = $currentRoute;
+            $this->_module = $routeConfig[$currentRoute]->module;
             $this->_controller = $routeConfig[$currentRoute]->controller;
             $this->_action = $routeConfig[$currentRoute]->action;
+            $this->_id = $routeConfig[$currentRoute]->id;
             return true;
         } else {
             //remove url query params and parse route into its parts
@@ -112,8 +129,10 @@ class Router {
                     }
                     if ($routeMatch) {
                         $this->_matchedRoute = $path;
+                        $this->_module = $route->module;
                         $this->_controller = $route->controller;
                         $this->_action = $route->action;
+                        $this->_id = $route->id;
                         $matchedRoute = explode('/', substr($this->_matchedRoute, 1));
                         $i = 0;
                         foreach ($matchedRoute as $matchedRoutePart) {
@@ -128,8 +147,10 @@ class Router {
             }
             if (array_key_exists('*', $routeConfig)) {
                 $this->_matchedRoute = '*';
+                $this->_module = $routeConfig['*']->module;
                 $this->_controller = $routeConfig['*']->controller;
                 $this->_action = $routeConfig['*']->action;
+                $this->_id = $routeConfig['*']->id;
                 return true;
             } else {
                 return false;

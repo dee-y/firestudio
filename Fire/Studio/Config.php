@@ -9,9 +9,24 @@ class Config
 
     private $_config;
 
+    private $_loadedConfigFiles;
+
     public function __construct()
     {
         $this->_config = (object) [];
+        $this->_loadedConfigFiles = [];
+    }
+
+    public function addConfigFile($pathToJsonFile)
+    {
+        $jsonConfig = file_get_contents($pathToJsonFile);
+        $this->_loadedConfigFiles[] = (object) [
+            'config' => $pathToJsonFile,
+            'trace' => debug_backtrace(),
+            'fileContent' => $jsonConfig
+        ];
+
+        $this->addJsonConfig($jsonConfig);
     }
 
     public function addJsonConfig($config)
@@ -25,6 +40,16 @@ class Config
         $this->_addConfig($addConfig);
     }
 
+    public function addObjectConfig($config)
+    {
+        $this->_addConfig($config);
+    }
+
+    public function getLoadedConfigFiles()
+    {
+        return $this->_loadedConfigFiles;
+    }
+
     public function getConfig()
     {
         return $this->_config;
@@ -32,10 +57,7 @@ class Config
 
     private function _addConfig($addConfig)
     {
-        $currentConfig = $this->_config;
-        $addConfig = $addConfig;
-        $this->_config = $this->_mergeRecursively($currentConfig, $addConfig);
-        //$this->_config = (object) $this->_mergeArrayRecursively($currentConfig, $addConfig);
+        $this->_config = $this->_mergeRecursively($this->_config, $addConfig);
     }
 
     private function _mergeRecursively($obj1, $obj2) {
@@ -47,44 +69,26 @@ class Config
                     && is_object($obj1->{$key})
                     && is_object($obj2->{$key})
                 ) {
-                    $this->_mergeRecursively($obj1->{$key}, $obj2->{$key});
+                    $obj1->{$key} = $this->_mergeRecursively($obj1->{$key}, $obj2->{$key});
+                } elseif (isset($obj1->{$key})
+                && is_array($obj1->{$key})
+                && is_array($obj2->{$key})) {
+                    $obj1->{$key} = $this->_mergeRecursively($obj1->{$key}, $obj2->{$key});
                 } else {
                     $obj1->{$key} = $obj2->{$key};
                 }
             }
         } elseif (is_array($obj2)) {
-            $keys = array_keys($obj2);
-            foreach ($keys as $key) {
-                if (
-                    isset($obj1[$key])
-                    && is_object($obj1[$key])
-                    && is_object($obj2[$key])
-                ) {
-                    $this->_mergeRecursively($obj1[$key], $obj2[$key]);
-                } else {
-                    $obj1[$key] = $obj2[$key];
-                }
+            if (
+                is_array($obj1)
+                && is_array($obj2)
+            ) {
+                $obj1 = array_merge_recursive($obj1, $obj2);
+            } else {
+                $obj1 = $obj2;
             }
         }
 
         return $obj1;
     }
-
-    private function _mergeArrayRecursively($arr1, $arr2)
-    {
-        $keys = array_keys($arr2);
-        foreach($keys as $key) {
-            if(
-                isset($arr1[$key])
-                && is_array($arr1[$key])
-                && is_array($arr2[$key])
-            ) {
-                $arr1[$key] = $this->_mergeArrayRecursively($arr1[$key], $arr2[$key]);
-            } else {
-                $arr1[$key] = $arr2[$key];
-            }
-        }
-        return $arr1;
-    }
-
 }

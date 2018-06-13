@@ -4,6 +4,7 @@
         "adapter": "sqlite",
         "location": "/home/johnsonj/Projects/UA1/Fire/firestudio/public/firestudio.db"
     },
+    "routes": {},
     "modules": [
         "Fire\\Studio\\Application\\Module\\Application",
         "Fire\\Studio\\Application\\Module\\Admin"

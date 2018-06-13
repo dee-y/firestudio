@@ -7,8 +7,16 @@ $routeDebug = $this->getRouterDebug();
     <?php echo ($routeDebug->route) ? $routeDebug->route : 'false'; ?>
 </span>
 <span class="fs-label">
+    <strong>ID: </strong>
+    <?php echo ($routeDebug->id) ? $routeDebug->id : 'false'; ?>
+</span>
+<span class="fs-label">
+    <strong>Module: </strong>
+    <?php echo ($routeDebug->module) ? $routeDebug->module : 'false'; ?>
+</span>
+<span class="fs-label">
     <strong>Controller: </strong>
-    <?php echo ($routeDebug->controller) ? $routeDebug->controller: 'false'; ?>
+    <?php echo ($routeDebug->controller) ? $routeDebug->controller : 'false'; ?>
 </span>
 <span class="fs-label">
     <strong>Action: </strong>
@@ -43,12 +51,16 @@ $routeDebug = $this->getRouterDebug();
     <tbody>
         <tr>
             <th>Path</th>
+            <th>ID</th>
+            <th>Module</th>
             <th>Controller</th>
-            <th>Method</th>
+            <th>Action</th>
         </tr>
         <?php foreach ($routeDebug->routes as $path => $config) { ?>
         <tr>
             <td><?php echo $path; ?></td>
+            <td><?php echo $config->id; ?></td>
+            <td><?php echo $config->module; ?></td>
             <td><?php echo $config->controller; ?></td>
             <td><?php echo $config->action; ?></td>
         </tr>

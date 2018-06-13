@@ -1,14 +1,55 @@
 <?php
     $templates = $this->getTemplates();
+    $partials = $this->getPartials();
+    $inlineStyles = $this->getInlineStyles();
+    $inlineScripts = $this->getInlineScripts();
 ?>
-
+<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>TEMPLATES</strong></span>
 <?php if ($templates) { ?>
     <?php foreach ($templates as $id => $template) { ?>
-        <span class="fs-label"><strong>Template ID: </strong><?php echo $id; ?></span>
+        <span class="fs-label"><strong>Template: </strong><?php echo $id; ?></span>
+        <span class="fs-label"><strong>Loaded: </strong><?php echo $template->file; ?></span>
+        <span class="fs-label"><?php echo $this->renderTrace($template->trace); ?></span>
         <span class="fs-label">
             <span class="fs-pre-wrap">wrap</span>
-            <pre class="debugger fs-dark"><?php echo htmlspecialchars($template); ?></pre>
+            <pre class="debugger fs-dark"><?php echo htmlspecialchars($template->template); ?></pre>
         </span>
-        <hr class="fs-hr">
+
     <?php } ?>
+<?php } else { ?>
+    <span class="fs-label">No Templates Found...<span>
+<?php } ?>
+<hr class="fs-hr">
+<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>PARTIALS</strong></span>
+<?php if ($partials) { ?>
+    <?php foreach ($partials as $id => $template) { ?>
+        <span class="fs-label"><strong>Partial: </strong><?php echo $id; ?></span>
+        <span class="fs-label"><strong>Loaded: </strong><?php echo $template->file; ?></span>
+        <span class="fs-label"><?php echo $this->renderTrace($template->trace); ?></span>
+        <span class="fs-label">
+            <span class="fs-pre-wrap">wrap</span>
+            <pre class="debugger fs-dark"><?php echo htmlspecialchars($template->partial); ?></pre>
+        </span>
+
+    <?php } ?>
+<?php } else { ?>
+    <span class="fs-label">No Partials Found...<span>
+<?php } ?>
+<hr class="fs-hr">
+<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>INLINE STYLES LOADED</strong></span>
+<?php if ($inlineStyles) { ?>
+    <?php foreach ($inlineStyles as $i => $style) { ?>
+        <span class="fs-label"><strong>#<?php echo $i; ?>: </strong><?php echo $style; ?></span>
+    <?php } ?>
+<?php } else { ?>
+    <span class="fs-label">No Inline Styles Found Found...<span>
+<?php } ?>
+<hr class="fs-hr">
+<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>INLINE SCRIPTS LOADED</strong></span>
+<?php if ($inlineScripts) { ?>
+    <?php foreach ($inlineScripts as $i => $script) { ?>
+        <span class="fs-label"><strong>#<?php echo $i; ?>: </strong><?php echo $script; ?></span>
+    <?php } ?>
+<?php } else { ?>
+    <span class="fs-label">No Inline Scripts Found Found...<span>
 <?php } ?>

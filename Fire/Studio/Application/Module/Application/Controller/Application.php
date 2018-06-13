@@ -11,15 +11,11 @@ class Application extends Controller {
 
     public function notFound()
     {
-        echo 'test';
         $this->loadTemplate(
             self::TEMPLATE_APPLICATION_NOTFOUND,
             __DIR__ . '/../Template/error/not-found.phtml'
         );
-        echo $this->render(
-            ApplicationModule::TEMPLATE_APPLICATION_LAYOUT,
-            []
-        );
+        echo $this->render(ApplicationModule::TEMPLATE_APPLICATION_LAYOUT);
     }
 
 }

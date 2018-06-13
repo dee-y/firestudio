@@ -17,7 +17,7 @@ class View extends Panel
      * Constants
      */
     const ID = 'view';
-    const NAME = 'Templates';
+    const NAME = 'View';
     const TEMPLATE = '/view.phtml';
 
     private $_view;
@@ -35,5 +35,20 @@ class View extends Panel
     public function getTemplates()
     {
         return $this->_view->getTemplates();
+    }
+
+    public function getPartials()
+    {
+        return $this->_view->getPartials();
+    }
+
+    public function getInlineStyles()
+    {
+        return $this->_view->getInlineStyles();
+    }
+
+    public function getInlineScripts()
+    {
+        return $this->_view->getInlineScripts();
     }
 }

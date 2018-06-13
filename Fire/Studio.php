@@ -13,6 +13,8 @@ use \Fire\Studio\Router;
 use \Fire\Bug\Panel\Router as FireBugPanelRouter;
 use \Fire\Studio\View;
 use \Fire\Bug\Panel\View as FireBugPanelView;
+use \Fire\Bug\Panel\Modules as FireBugPanelModules;
+use \Fire\Bug\Panel\Render as FireBugPanelRender;
 use \PDO;
 
 class Studio
@@ -40,20 +42,25 @@ class Studio
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
         $this->_initRouter();
+        $this->_initModulesDebug();
         $this->_initView();
+        $this->_initRenderDebug();
         $this->_modules = [];
     }
 
-    public function addConfig($pathToJsonConfig)
+    public function loadConfig($pathToJsonConfig)
     {
-        $jsonConfig = file_get_contents($pathToJsonConfig);
-        $this->_config->addJsonConfig($jsonConfig);
+        $this->_config->addConfigFile($pathToJsonConfig);
     }
 
     public function addModule(Module $module)
     {
-        $module->init();
-        $this->_modules[] = $module;
+        $moduleClass = get_class($module);
+        if (!isset($this->_modules[$moduleClass])) {
+            $module->init();
+            $this->_modules[$moduleClass] = $module;
+            $this->_debug->getPanel(FireBugPanelModules::ID)->addModule($moduleClass, debug_backtrace());
+        }
     }
 
     public function run()
@@ -61,7 +68,7 @@ class Studio
         $this->_initModules();
         $this->_setupRoutes();
         $this->_resolveRoute();
-        $this->_invokeController();
+        $this->_invokeModuleControllerAction();
     }
 
     /**
@@ -91,8 +98,8 @@ class Studio
 
         //setup application configurations
         $defaultAppConfig = __DIR__ . '/Studio/Application/Config/application.json';
-        $this->addConfig($defaultAppConfig);
-        $this->addConfig($appConfig);
+        $this->loadConfig($defaultAppConfig);
+        $this->loadConfig($appConfig);
 
         //add config debug panel
         $this->_debug->addPanel(new FireBugPanelConfig());
@@ -167,12 +174,22 @@ class Studio
         $this->_debug->addPanel(new FireBugPanelRouter());
     }
 
+    private function _initModulesDebug()
+    {
+        $this->_debug->addPanel(new FireBugPanelModules());
+    }
+
     private function _initView()
     {
         $this->injector->set(self::INJECTOR_VIEW, new View());
         $this->_view = $this->injector->get(self::INJECTOR_VIEW);
 
         $this->_debug->addPanel(new FireBugPanelView());
+    }
+
+    private function _initRenderDebug()
+    {
+        $this->_debug->addPanel(new FireBugPanelRender());
     }
 
     /**
@@ -195,8 +212,8 @@ class Studio
     {
         $config = $this->_config->getConfig();
         $routes = (isset($config->routes)) ? $config->routes : [];
-        foreach ($routes as $route) {
-            $this->_router->when($route->path, $route->controller, $route->action);
+        foreach ($routes as $id => $route) {
+            $this->_router->when($route->path, $route->module, $route->controller, $route->action, $id);
         }
     }
 
@@ -205,8 +222,14 @@ class Studio
         $this->_router->resolve();
     }
 
-    private function _invokeController()
+    private function _invokeModuleControllerAction()
     {
+        $module = $this->_router->getModule();
+        if ($module) {
+            $addModule = new $module();
+            $this->addModule($addModule);
+        }
+
         $controllerClass = $this->_router->getController();
         $action = $this->_router->getAction();
         if ($controllerClass && $action) {

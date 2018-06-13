@@ -2,6 +2,7 @@
     "routes": {
         "application.notFound": {
             "path": "*",
+            "module": "Fire\\Studio\\Application\\Module\\Application",
             "controller": "Fire\\Studio\\Application\\Module\\Application\\Controller\\Application",
             "action": "notFound"
         }

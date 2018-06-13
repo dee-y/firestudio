@@ -8,6 +8,7 @@ class Controller {
 
     use \Fire\Studio\Injector;
 
+    public $model;
     private $_config;
     private $_view;
 
@@ -16,6 +17,7 @@ class Controller {
         $this->_fireInjector();
         $this->_config = $this->injector->get(Studio::INJECTOR_CONFIG);
         $this->_view = $this->injector->get(Studio::INJECTOR_VIEW);
+        $this->model = (object) [];
     }
 
     public function init()
@@ -23,15 +25,14 @@ class Controller {
 
     }
 
-    public function addConfig($pathToConfig)
+    public function loadConfig($pathToConfig)
     {
-        $jsonConfig = file_get_contents($pathToConfig);
-        $this->_config->addJsonConfig($jsonConfig);
+        $this->_config->addConfigFile($pathToConfig);
     }
 
-    public function loadTemplate($id, $pathToTemplate)
+    public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
     {
-        $this->_view->loadTemplate($id, $pathToTemplate);
+        $this->_view->loadTemplate($id, $pathToTemplate, $loadAsPartial);
     }
 
     public function getTemplate($id)
@@ -39,8 +40,8 @@ class Controller {
         return $this->_view->getTemplate($id);
     }
 
-    public function render($layout, $model)
+    public function render($layout)
     {
-        return $this->_view->render($layout, $model);
+        return $this->_view->render($layout, $this->model);
     }
 }

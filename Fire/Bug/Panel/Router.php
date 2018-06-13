@@ -37,7 +37,9 @@ class Router extends Panel
             'route' => $router->getRoute(),
             'controller' => $router->getController(),
             'action' => $router->getAction(),
-            'variables' => $router->getVariables()
+            'module' => $router->getModule(),
+            'variables' => $router->getVariables(),
+            'id' => $router->getId()
         ];
     }
 }
