@@ -96,11 +96,14 @@ class View
         $mustache = new Mustache_Engine([
             'partials' => $partials
         ]);
+
+        //add template and model data to render debug panel.
+        $renderDebugPanel = $this->_debug->getPanel(FireBugPanelRender::ID);
+        $renderDebugPanel->setTemplateId($templateId);
+        $renderDebugPanel->setModel($model);
+
         $model->debugPanel = $this->_debug->render(false);
         $mustacheTemplate = $this->getTemplate($templateId);
-        $renderDebug = $this->_debug->getPanel(FireBugPanelRender::ID);
-        $renderDebug->setTemplateId($templateId);
-        $renderDebug->setModel($model);
         return $mustache->render($mustacheTemplate, $model);
     }
 

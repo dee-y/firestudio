@@ -6,24 +6,7 @@
     <?php foreach ($loadedConfigs as $i => $config) { ?>
         <span class="fs-label"><strong>Loaded: </strong><?php echo $config->config; ?></span>
         <span class="fs-label">
-            <?php
-                $traces = $config->trace;
-                foreach ($traces as $index => $trace) {
-                    $traceLine = '#' . $index . ' ';
-                    if (!empty($trace['file'])) {
-                        $traceLine .= $trace['file'];
-                    }
-                    if (!empty($trace['line'])) {
-                        $traceLine .= '(' . $trace['line'] . ') ';
-                    }
-                    if (!empty($trace['class'])) {
-                        $traceLine .= $trace['class'] . '::';
-                    }
-                    $traceLine .= $trace['function'] . '()'
-                        . '<br>';
-                    echo $traceLine;
-                }
-            ?>
+            <?php echo $this->renderTrace($config->trace); ?>
         </span>
         <span class="fs-label">
             <span class="fs-pre-wrap">wrap</span>

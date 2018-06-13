@@ -39,7 +39,7 @@ class Render extends Panel
 
     public function getTemplateId()
     {
-        return $this->_template;
+        return $this->_templateId;
     }
 
     public function setModel($model)

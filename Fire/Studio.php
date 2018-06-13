@@ -41,8 +41,8 @@ class Studio
         $this->_initDebugPanel();
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
-        $this->_initRouter();
         $this->_initModulesDebug();
+        $this->_initRouter();
         $this->_initView();
         $this->_initRenderDebug();
         $this->_modules = [];

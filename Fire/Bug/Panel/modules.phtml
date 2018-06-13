@@ -1,29 +1,11 @@
 <?php
     $loadedModules = $this->getLoadedModules();
 ?>
-<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>LOADED MODULES</strong></span>
 <?php if ($loadedModules) { ?>
     <?php foreach ($loadedModules as $module) { ?>
         <span class="fs-label"><strong>Loaded: </strong><?php echo $module->module; ?></span>
         <span class="fs-label">
-            <?php
-                $traces = $module->trace;
-                foreach ($traces as $index => $trace) {
-                    $traceLine = '#' . $index . ' ';
-                    if (!empty($trace['file'])) {
-                        $traceLine .= $trace['file'];
-                    }
-                    if (!empty($trace['line'])) {
-                        $traceLine .= '(' . $trace['line'] . ') ';
-                    }
-                    if (!empty($trace['class'])) {
-                        $traceLine .= $trace['class'] . '::';
-                    }
-                    $traceLine .= $trace['function'] . '()'
-                        . '<br>';
-                    echo $traceLine;
-                }
-            ?>
+            <?php echo $this->renderTrace($module->trace); ?>
         </span>
         <hr class="fs-hr">
     <?php } ?>
