@@ -2,7 +2,7 @@
     "debug": true,
     "pdo": {
         "adapter": "sqlite",
-        "location": "/home/johnsonj/Projects/UA1/Fire/firestudio/public/firestudio.db"
+        "location": "/Users/josjohns/projects/playground/firestudio/public/firestudio.db"
     },
     "routes": {},
     "modules": [
