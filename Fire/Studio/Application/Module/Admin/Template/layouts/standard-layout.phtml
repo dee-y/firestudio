@@ -30,11 +30,14 @@
         </aside>
         <div id="admin-main">
             <div class="admin-main-inner">
-                {{>fire.studio.admin.page}}
+                <section class="content">
+                    {{>fire.studio.admin.page}}
+                </section>
+                {{{debugPanel}}}
             </div>
         </div>
         <footer id="admin-footer">
-            {{{debugPanel}}}
+            <span>Powered By FireSTUDIO a <a href="https://ua1.us">UA1 Labs</a> Project</span>
         </footer>
         {{{inlineScripts}}}
 

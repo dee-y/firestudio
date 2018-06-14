@@ -11,10 +11,33 @@ body {
     margin: 0;
 }
 
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary
+{
+    display: block;
+}
+
 #admin-header {
     background-color: #3c8dbc;
     display: block;
     width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-height: 50px;
+    overflow: hidden;
+    z-index: 1000;
 }
 
 #admin-header .logo {
@@ -51,4 +74,51 @@ body {
     border: none;
     min-height: 50px;
     border-radius: 0;
+}
+
+#admin-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 50px;
+    min-height: 100%;
+    width: 230px;
+    -webkit-transition: -webkit-transform .3s ease-in-out,width .3s ease-in-out;
+    -moz-transition: -moz-transform .3s ease-in-out,width .3s ease-in-out;
+    -o-transition: -o-transform .3s ease-in-out,width .3s ease-in-out;
+    transition: transform .3s ease-in-out,width .3s ease-in-out;
+    background-color: #464646;
+    z-index: 900;
+}
+
+#admin-main {
+    -webkit-transition: -webkit-transform .3s ease-in-out,margin .3s ease-in-out;
+    -moz-transition: -moz-transform .3s ease-in-out,margin .3s ease-in-out;
+    -o-transition: -o-transform .3s ease-in-out,margin .3s ease-in-out;
+    transition: transform .3s ease-in-out,margin .3s ease-in-out;
+    margin-left: 230px;
+    padding-top: 50px;
+    z-index: 910;
+    background-color: #ecf0f5;
+}
+
+#admin-main section.content {
+    min-height: 250px;
+    padding: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#admin-footer {
+    -webkit-transition: -webkit-transform .3s ease-in-out,margin .3s ease-in-out;
+    -moz-transition: -moz-transform .3s ease-in-out,margin .3s ease-in-out;
+    -o-transition: -o-transform .3s ease-in-out,margin .3s ease-in-out;
+    transition: transform .3s ease-in-out,margin .3s ease-in-out;
+    margin-left: 230px;
+    z-index: 820;
+    background-color: #fff;
+    padding: 15px;
+    border-top: 1px solid #d2d6de;
 }
