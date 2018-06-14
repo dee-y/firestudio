@@ -20,12 +20,12 @@ class Module {
         $this->model = $this->injector->get(Studio::INJECTOR_MODEL);
     }
 
-    public function init()
+    public function config()
     {
 
     }
 
-    public function run()
+    public function init()
     {
 
     }
@@ -38,6 +38,11 @@ class Module {
     public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
     {
         $this->_view->loadTemplate($id, $pathToTemplate, $loadAsPartial);
+    }
+
+    public function loadPartial($id, $pathToPartial)
+    {
+        $this->_view->loadTemplate($id, $pathToPartial, true);
     }
 
     public function addInlineStyle($id, $pathToInlineStyle)

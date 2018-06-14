@@ -4,7 +4,16 @@
     box-sizing: border-box;
 }
 
+:after, :before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 body {
+    font-family: Geneva, Tahoma, Verdana, sans-serif;
+    color: #60646d;
+    font-size: 15px;
     overflow-x: hidden;
     overflow-y: auto;
     padding: 0;
@@ -26,6 +35,24 @@ section,
 summary
 {
     display: block;
+}
+
+.admin-wrapper {
+    height: 100%;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto
+}
+
+.admin-wrapper:before,
+.admin-wrapper:after
+{
+    content: " ";
+    display: table;
+}
+
+.admin-wrapper:after {
+    clear: both;
 }
 
 #admin-header {
@@ -117,7 +144,7 @@ summary
     -o-transition: -o-transform .3s ease-in-out,margin .3s ease-in-out;
     transition: transform .3s ease-in-out,margin .3s ease-in-out;
     margin-left: 230px;
-    z-index: 820;
+    z-index: 910;
     background-color: #fff;
     padding: 15px;
     border-top: 1px solid #d2d6de;

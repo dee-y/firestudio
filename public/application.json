@@ -2,11 +2,11 @@
     "debug": true,
     "pdo": {
         "adapter": "sqlite",
-        "location": "/home/johnsonj/Projects/UA1/Fire/firestudio/public/firestudio.db"
+        "location": "/Users/josjohns/projects/playground/firestudio/public/firestudio.db"
     },
     "routes": {},
     "modules": [
-        "Fire\\Studio\\Application\\Module\\Application",
-        "Fire\\Studio\\Application\\Module\\Admin"
+        "Fire\\Studio\\Application\\Module\\ApplicationModule",
+        "Fire\\Studio\\Application\\Module\\AdminModule"
     ]
 }

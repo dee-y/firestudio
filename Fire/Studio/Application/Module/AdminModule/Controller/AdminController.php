@@ -1,11 +1,11 @@
 <?php
 
-namespace Fire\Studio\Application\Module\Admin\Controller;
+namespace Fire\Studio\Application\Module\AdminModule\Controller;
 
 use \Fire\Studio\Controller;
-use \Fire\Studio\Application\Module\Admin as AdminModule;
+use \Fire\Studio\Application\Module\AdminModule;
 
-class Admin extends Controller {
+class AdminController extends Controller {
 
     public function init()
     {

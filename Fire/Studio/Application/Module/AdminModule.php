@@ -3,23 +3,24 @@
 namespace Fire\Studio\Application\Module;
 
 use \Fire\Studio\Module;
-use \Fire\Studio\Application\Module\Admin\MenuItem;
-use \Fire\Studio\Application\Module\Application;
+use \Fire\Studio\Application\Module\AdminModule\MenuItem;
+use \Fire\Studio\Application\Module\ApplicationModule;
 use \Fire\Studio;
 
-class Admin extends Module {
+class AdminModule extends Module {
 
     const TEMPLATE_ADMIN_LAYOUT = 'fire.studio.admin.layout';
     const PARTIAL_ADMIN_PAGE = 'fire.studio.admin.page';
     const ADMIN_STANDARD_LAYOUT_STYLE = 'admin.standardStyle';
     const ADMIN_DASHBOARD_URL = 'admin.dashboard';
 
-    private $_router;
+    public function config()
+    {
+        $this->loadConfig(__DIR__ . '/AdminModule/Config/module.json');
+    }
 
     public function init()
     {
-        $this->loadConfig(__DIR__ . '/Admin/Config/module.json');
-        $this->_router = $this->injector->get(Studio::INJECTOR_ROUTER);
         $this->_loadPartials();
         $this->_loadTemplates();
         $this->_addInlineStyles();
@@ -27,17 +28,11 @@ class Admin extends Module {
         $this->_initViewModel();
     }
 
-    public function run()
-    {
-        $this->_loadMenu();
-    }
-
     private function _loadPartials()
     {
-        $this->loadTemplate(
-            Application::TEMPLATE_APPLICATION_PARTIAL_HTML_HEAD,
-            __DIR__ . '/Application/Template/partials/htmlHead.phtml',
-            true
+        $this->loadPartial(
+            ApplicationModule::TEMPLATE_APPLICATION_PARTIAL_HTML_HEAD,
+            __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
         );
     }
 
@@ -45,7 +40,7 @@ class Admin extends Module {
     {
         $this->loadTemplate(
             self::TEMPLATE_ADMIN_LAYOUT,
-            __DIR__ . '/Admin/Template/layouts/standard-layout.phtml'
+            __DIR__ . '/AdminModule/Template/layouts/standard-layout.phtml'
         );
     }
 
@@ -53,7 +48,7 @@ class Admin extends Module {
     {
         $this->addInlineStyle(
             self::ADMIN_STANDARD_LAYOUT_STYLE,
-            __DIR__ . '/Admin/Public/css/standardLayout.css'
+            __DIR__ . '/AdminModule/Public/css/standardLayout.css'
         );
     }
 
@@ -64,23 +59,14 @@ class Admin extends Module {
 
     private function _initViewModel()
     {
+        $router = $this->injector->get(Studio::INJECTOR_ROUTER);
         $this->model->adminMenu = [];
-        $this->model->adminHomeUrl = $this->_router->getUrl(self::ADMIN_DASHBOARD_URL);
-    }
+        $this->model->adminHomeUrl = $router->getUrl(self::ADMIN_DASHBOARD_URL);
 
-    private function _loadMenu()
-    {
-        if (!isset($this->model->adminMenu)) {
-            $this->model->adminMenu = [];
-        }
-
-        //dashboard link
         $this->model->adminMenu[] =  new MenuItem(
             self::ADMIN_DASHBOARD_URL,
             'Dashboard',
-            $this->_router->getUrl(self::ADMIN_DASHBOARD_URL)
+            $router->getUrl(self::ADMIN_DASHBOARD_URL)
         );
-        debugger($this->model->adminMenu);
     }
-
 }

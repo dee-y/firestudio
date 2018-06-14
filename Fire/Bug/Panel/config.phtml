@@ -11,7 +11,7 @@
         </span>
         <span class="fs-label">
             <span class="fs-pre-wrap">wrap</span>
-            <pre class="debugger fs-dark"><?php echo json_encode(json_decode($config->fileContent), JSON_PRETTY_PRINT) ?></pre>
+            <pre class="debugger fs-dark"><?php echo htmlspecialchars(json_encode(json_decode($config->fileContent), JSON_PRETTY_PRINT)); ?></pre>
         </span>
         <hr class="fs-hr-dotted">
     <?php } ?>
@@ -22,5 +22,5 @@
 <span class="fs-label" style="text-decoration: underline; margin-top: 25px;"><strong>APPLICATION CONFIGURATION</strong></span>
 <span class="fs-label">
     <span class="fs-pre-wrap">wrap</span>
-    <pre class="debugger fs-dark"><?php echo json_encode($this->getConfig(), JSON_PRETTY_PRINT); ?></pre>
+    <pre class="debugger fs-dark"><?php echo htmlspecialchars(json_encode($this->getConfig(), JSON_PRETTY_PRINT)); ?></pre>
 </span>

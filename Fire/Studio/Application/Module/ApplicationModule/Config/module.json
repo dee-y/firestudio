@@ -1,0 +1,10 @@
+{
+    "routes": {
+        "application.notFound": {
+            "path": "*",
+            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
+            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\ApplicationController",
+            "action": "notFound"
+        }
+    }
+}

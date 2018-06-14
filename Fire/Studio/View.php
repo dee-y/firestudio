@@ -11,6 +11,10 @@ class View
 
     use \Fire\Studio\Injector;
 
+    private $_debug;
+
+    private $_config;
+
     private $_templates;
 
     private $_partials;
@@ -25,6 +29,7 @@ class View
     {
         $this->_fireInjector();
         $this->_debug = $this->injector->get(Studio::INJECTOR_DEBUG_PANEL);
+        $this->_config = $this->injector->get(Studio::INJECTOR_CONFIG);
         $this->model = $this->injector->get(Studio::INJECTOR_MODEL);
         $this->_templates = [];
         $this->_partials = [];
@@ -102,6 +107,7 @@ class View
 
     public function render($templateId)
     {
+        $config = $this->_config->getConfig();
         //initialize partials into mustache templates.
         $partials = [];
         foreach ($this->getPartials() as $id => $partial) {
@@ -126,6 +132,10 @@ class View
             $this->model->inlineScripts .= "\n";
         }
         $this->model->inlineScripts .= '</script>';
+
+        //initialize logo and footerText
+        $this->model->logo = $config->logo;
+        $this->model->footerText = $config->footerText;
 
         //add template and model data to render debug panel.
         $renderDebugPanel = $this->_debug->getPanel(FireBugPanelRender::ID);

@@ -8,9 +8,9 @@ class Controller {
 
     use \Fire\Studio\Injector;
 
-    public $model;
     private $_config;
     private $_view;
+    public $model;
 
     public function __construct()
     {
@@ -33,6 +33,11 @@ class Controller {
     public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
     {
         $this->_view->loadTemplate($id, $pathToTemplate, $loadAsPartial);
+    }
+
+    public function loadPartial($id, $pathToPartial)
+    {
+        $this->_view->loadTemplate($id, $pathToPartial, true);
     }
 
     public function addInlineStyle($id, $pathToInlineStyle)

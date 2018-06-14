@@ -2,5 +2,7 @@
     "debug": false,
     "pdo": false,
     "modules": [],
-    "routes": {}
+    "routes": {},
+    "logo": "Fire<strong>STUDIO</strong>",
+    "footerText": "<span>Powered By FireStudio. A Project By <a href=\"https:\/\/ua1.us\">UA1 Labs</a></span>"
 }

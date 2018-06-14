@@ -1,6 +1,6 @@
 <?php
 
-namespace Fire\Studio\Application\Module\Admin;
+namespace Fire\Studio\Application\Module\AdminModule;
 
 class MenuItem
 {

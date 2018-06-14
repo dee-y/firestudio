@@ -31,23 +31,20 @@ class Studio
     const INJECTOR_MODEL = 'fire.studio.model';
 
     private $_config;
-    private $_db;
     private $_debug;
     private $_router;
+    private $_model;
     private $_view;
+    private $_db;
     private $_modules;
 
     public function __construct($appJsonConfig)
     {
         $this->_fireInjector();
-        $this->_initDebugPanel();
+        $this->_initInjector();
+        $this->_initDebug();
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
-        $this->_initModulesDebug();
-        $this->_initRouter();
-        $this->_initViewModel();
-        $this->_initView();
-        $this->_initRenderDebug();
         $this->_modules = [];
     }
 
@@ -60,18 +57,22 @@ class Studio
     {
         if (!isset($this->_modules[$moduleClass])) {
             $module = new $moduleClass();
-            $module->init();
+            $module->config();
             $this->_modules[$moduleClass] = $module;
             $this->_debug->getPanel(FireBugPanelModules::ID)->addModule($moduleClass, debug_backtrace());
         }
     }
 
+    public function getModule($moduleClass)
+    {
+        return $this->_modules[$moduleClass];
+    }
+
     public function run()
     {
-        $this->_initModules();
-        $this->_setupRoutes();
-        $this->_resolveRoute();
-        $this->_runModules();
+        $this->_initModulesFromConfig();
+        $this->_setupRoutesFromConfig();
+        $this->_resolveRouteInitModule();
         $this->_invokeControllerAction();
     }
 
@@ -81,32 +82,40 @@ class Studio
      * ================================================================================
      */
 
-    private function _initDebugPanel()
+    private function _initInjector()
     {
-         //setup injector
-         $this->injector->set(self::INJECTOR_DEBUG_PANEL, Bug::get());
-         $this->_debug = $this->injector->get(self::INJECTOR_DEBUG_PANEL);
+        $this->injector->set(self::INJECTOR_DEBUG_PANEL, Bug::get());
+        $this->_debug = $this->injector->get(self::INJECTOR_DEBUG_PANEL);
+        $this->injector->set(self::INJECTOR_CONFIG, new Config());
+        $this->_config = $this->injector->get(self::INJECTOR_CONFIG);
+        $this->injector->set(self::INJECTOR_ROUTER, new Router());
+        $this->_router = $this->injector->get(self::INJECTOR_ROUTER);
+        $this->injector->set(self::INJECTOR_MODEL, new ViewModel());
+        $this->_model = $this->injector->get(self::INJECTOR_MODEL);
+        $this->injector->set(self::INJECTOR_VIEW, new View());
+        $this->_view = $this->injector->get(self::INJECTOR_VIEW);
+    }
 
+    private function _initDebug()
+    {
          //enable debugging
          $this->_debug->enable();
 
-         //add injector debug panel
+         //add all debug panels
          $this->_debug->addPanel(new FireBugPanelInjector());
+         $this->_debug->addPanel(new FireBugPanelConfig());
+         $this->_debug->addPanel(new FireBugPanelRouter());
+         $this->_debug->addPanel(new FireBugPanelModules());
+         $this->_debug->addPanel(new FireBugPanelView());
+         $this->_debug->addPanel(new FireBugPanelRender());
     }
 
     private function _initConfig($appConfig)
     {
-        //setup injector
-        $this->injector->set(self::INJECTOR_CONFIG, new Config());
-        $this->_config = $this->injector->get(self::INJECTOR_CONFIG);
-
         //setup application configurations
         $defaultAppConfig = __DIR__ . '/Studio/Application/Config/application.json';
         $this->loadConfig($defaultAppConfig);
         $this->loadConfig($appConfig);
-
-        //add config debug panel
-        $this->_debug->addPanel(new FireBugPanelConfig());
     }
 
     private function _initDb()
@@ -161,7 +170,6 @@ class Studio
                 && isset($password)
             ) {
                 $pdo = new PDO($dns, $username, $password);
-
             } else {
                 $pdo = new PDO($dns);
             }
@@ -170,44 +178,13 @@ class Studio
         }
     }
 
-    private function _initRouter()
-    {
-        $this->injector->set(self::INJECTOR_ROUTER, new Router());
-        $this->_router = $this->injector->get(self::INJECTOR_ROUTER);
-
-        $this->_debug->addPanel(new FireBugPanelRouter());
-    }
-
-    private function _initModulesDebug()
-    {
-        $this->_debug->addPanel(new FireBugPanelModules());
-    }
-
-    private function _initViewModel()
-    {
-        $this->injector->set(self::INJECTOR_MODEL, new ViewModel());
-    }
-
-    private function _initView()
-    {
-        $this->injector->set(self::INJECTOR_VIEW, new View());
-        $this->_view = $this->injector->get(self::INJECTOR_VIEW);
-
-        $this->_debug->addPanel(new FireBugPanelView());
-    }
-
-    private function _initRenderDebug()
-    {
-        $this->_debug->addPanel(new FireBugPanelRender());
-    }
-
     /**
      * ================================================================================
      * Run Processes
      * ================================================================================
      */
 
-    private function _initModules()
+    private function _initModulesFromConfig()
     {
         $config = $this->_config->getConfig();
         $modules = (isset($config->modules)) ? $config->modules : [];
@@ -216,7 +193,7 @@ class Studio
         }
     }
 
-    private function _setupRoutes()
+    private function _setupRoutesFromConfig()
     {
         $config = $this->_config->getConfig();
         $routes = (isset($config->routes)) ? $config->routes : [];
@@ -225,14 +202,15 @@ class Studio
         }
     }
 
-    private function _resolveRoute()
+    private function _resolveRouteInitModule()
     {
         $this->_router->resolve();
 
-        $module = $this->_router->getModule();
-        if ($module) {
-            $this->addModule($module);
+        $moduleClass = $this->_router->getModule();
+        if ($moduleClass) {
+            $this->addModule($moduleClass);
         }
+        $this->getModule($moduleClass)->init();
     }
 
     private function _runModules()

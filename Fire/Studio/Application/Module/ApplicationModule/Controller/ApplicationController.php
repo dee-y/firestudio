@@ -1,11 +1,11 @@
 <?php
 
-namespace Fire\Studio\Application\Module\Application\Controller;
+namespace Fire\Studio\Application\Module\ApplicationModule\Controller;
 
 use \Fire\Studio\Controller;
-use \Fire\Studio\Application\Module\Application as ApplicationModule;
+use \Fire\Studio\Application\Module\ApplicationModule;
 
-class Application extends Controller {
+class ApplicationController extends Controller {
 
     const TEMPLATE_APPLICATION_NOTFOUND = 'fire.studio.error.notFound';
 
