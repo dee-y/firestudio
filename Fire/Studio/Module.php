@@ -8,17 +8,24 @@ class Module {
 
     use \Fire\Studio\Injector;
 
-    private $_config;
-    private $_view;
+    protected $_config;
+    protected $_view;
+    public $model;
 
     public function __construct()
     {
         $this->_fireInjector();
         $this->_config = $this->injector->get(Studio::INJECTOR_CONFIG);
         $this->_view = $this->injector->get(Studio::INJECTOR_VIEW);
+        $this->model = $this->injector->get(Studio::INJECTOR_MODEL);
     }
 
     public function init()
+    {
+
+    }
+
+    public function run()
     {
 
     }
@@ -33,9 +40,14 @@ class Module {
         $this->_view->loadTemplate($id, $pathToTemplate, $loadAsPartial);
     }
 
-    public function loadInlineStyle($pathToCss)
+    public function addInlineStyle($id, $pathToInlineStyle)
     {
-        
+        $this->_view->addInlineStyle($id, $pathToInlineStyle);
+    }
+
+    public function addInlineScript($id, $pathToInlineScript)
+    {
+        $this->_view->addInlineScript($id, $pathToInlineScript);
     }
 
 }

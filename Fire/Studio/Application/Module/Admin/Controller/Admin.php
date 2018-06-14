@@ -7,20 +7,21 @@ use \Fire\Studio\Application\Module\Admin as AdminModule;
 
 class Admin extends Controller {
 
-    const TEMPLATE_ADMIN_DASHBOARD = 'fire.studio.admin.dashboard';
+    public function init()
+    {
+        $this->model->title = 'FireStudio Admin';
+    }
 
     public function dashboard()
     {
         $this->loadTemplate(
-            self::TEMPLATE_ADMIN_DASHBOARD,
-            __DIR__ . '/../Template/admin/dashboard.phtml'
+            AdminModule::PARTIAL_ADMIN_PAGE,
+            __DIR__ . '/../Template/admin/dashboard.phtml',
+            true
         );
-        echo $this->render(
-            AdminModule::TEMPLATE_ADMIN_LAYOUT,
-            [
 
-            ]
-        );
+        $this->model->title = 'FireStudio Admin:Dashboard';
+        echo $this->render(AdminModule::TEMPLATE_ADMIN_LAYOUT);
     }
 
 }

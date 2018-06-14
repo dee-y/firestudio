@@ -7,7 +7,7 @@
 <span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>TEMPLATES</strong></span>
 <?php if ($templates) { ?>
     <?php foreach ($templates as $id => $template) { ?>
-        <hr class="fs-hr-dotted" style="margin-top: 20px; margin-bottom: 20px; border-top: 1px dotted; color: #464646;">
+        <hr class="fs-hr-dotted">
         <span class="fs-label"><strong>Template: </strong><?php echo $id; ?></span>
         <span class="fs-label"><strong>Loaded: </strong><?php echo $template->file; ?></span>
         <span class="fs-label"><?php echo $this->renderTrace($template->trace); ?></span>
@@ -23,7 +23,7 @@
 <span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>PARTIALS</strong></span>
 <?php if ($partials) { ?>
     <?php foreach ($partials as $id => $template) { ?>
-        <hr class="fs-hr-dotted" style="margin-top: 20px; margin-bottom: 20px; border-top: 1px dotted; color: #464646;">
+        <hr class="fs-hr-dotted">
         <span class="fs-label"><strong>Partial: </strong><?php echo $id; ?></span>
         <span class="fs-label"><strong>Loaded: </strong><?php echo $template->file; ?></span>
         <span class="fs-label"><?php echo $this->renderTrace($template->trace); ?></span>
@@ -31,7 +31,6 @@
             <span class="fs-pre-wrap">wrap</span>
             <pre class="debugger fs-dark"><?php echo htmlspecialchars($template->partial); ?></pre>
         </span>
-
     <?php } ?>
 <?php } else { ?>
     <span class="fs-label">No Partials Found...<span>
@@ -39,8 +38,15 @@
 <hr class="fs-hr">
 <span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>INLINE STYLES LOADED</strong></span>
 <?php if ($inlineStyles) { ?>
-    <?php foreach ($inlineStyles as $i => $style) { ?>
-        <span class="fs-label"><strong>#<?php echo $i; ?>: </strong><?php echo $style; ?></span>
+    <?php foreach ($inlineStyles as $id => $style) { ?>
+        <hr class="fs-hr-dotted">
+        <span class="fs-label"><strong>Style: </strong><?php echo $id; ?></span>
+        <span class="fs-label"><strong>Loaded: </strong><?php echo $style->file; ?></span>
+        <span class="fs-label"><?php echo $this->renderTrace($style->trace); ?></span>
+        <span class="fs-label">
+            <span class="fs-pre-wrap">wrap</span>
+            <pre class="debugger fs-dark"><?php echo $style->style; ?></pre>
+        </span>
     <?php } ?>
 <?php } else { ?>
     <span class="fs-label">No Inline Styles Found Found...<span>
@@ -48,8 +54,15 @@
 <hr class="fs-hr">
 <span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>INLINE SCRIPTS LOADED</strong></span>
 <?php if ($inlineScripts) { ?>
-    <?php foreach ($inlineScripts as $i => $script) { ?>
-        <span class="fs-label"><strong>#<?php echo $i; ?>: </strong><?php echo $script; ?></span>
+    <?php foreach ($inlineScripts as $id => $script) { ?>
+        <hr class="fs-hr-dotted">
+        <span class="fs-label"><strong>Style: </strong><?php echo $id; ?></span>
+        <span class="fs-label"><strong>Loaded: </strong><?php echo $script->file; ?></span>
+        <span class="fs-label"><?php echo $this->renderTrace($script->trace); ?></span>
+        <span class="fs-label">
+            <span class="fs-pre-wrap">wrap</span>
+            <pre class="debugger fs-dark"><?php echo $script->script; ?></pre>
+        </span>
     <?php } ?>
 <?php } else { ?>
     <span class="fs-label">No Inline Scripts Found Found...<span>

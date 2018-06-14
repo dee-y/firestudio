@@ -2,12 +2,13 @@
     $loadedModules = $this->getLoadedModules();
 ?>
 <?php if ($loadedModules) { ?>
+    <hr class="fs-hr-dotted" style="margin-top: 0;">
     <?php foreach ($loadedModules as $module) { ?>
         <span class="fs-label"><strong>Loaded: </strong><?php echo $module->module; ?></span>
         <span class="fs-label">
             <?php echo $this->renderTrace($module->trace); ?>
         </span>
-        <hr class="fs-hr-dotted" style="margin-top: 20px; margin-bottom: 20px; border-top: 1px dotted; color: #464646;">
+        <hr class="fs-hr-dotted">
 <?php } ?>
 <?php } else { ?>
 <span class="fs-label">No Modules Loaded...</span>

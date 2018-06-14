@@ -34,6 +34,17 @@ class Router {
         return $this;
     }
 
+    public function getUrl($id, $params = [])
+    {
+        $paramKeys = array_keys($params);
+        foreach ($this->_routes as $path => $route) {
+            if ($id === $route->id) {
+                return str_replace($paramKeys, $params, $path);
+            }
+        }
+        return false;
+    }
+
     public function resolve()
     {
         $this->_resolve();
@@ -85,7 +96,7 @@ class Router {
     {
         $this->_routes[$path] = (object) [
             'id' => $id,
-            'module' => ($module) ? $module : false,
+            'module' => $module,
             'controller' => $controller,
             'action' => $action
         ];

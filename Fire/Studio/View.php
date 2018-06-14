@@ -19,14 +19,17 @@ class View
 
     private $_inlineScripts;
 
+    public $model;
+
     public function __construct()
     {
         $this->_fireInjector();
         $this->_debug = $this->injector->get(Studio::INJECTOR_DEBUG_PANEL);
+        $this->model = $this->injector->get(Studio::INJECTOR_MODEL);
         $this->_templates = [];
         $this->_partials = [];
         $this->_inlineStyles = [];
-        $this->_inlineScrypts = [];
+        $this->_inlineScripts = [];
     }
 
     public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
@@ -47,14 +50,24 @@ class View
         }
     }
 
-    public function loadInlineStyle($pathToInlineStyle)
+    public function addInlineStyle($id, $pathToInlineStyle)
     {
-        $this->_inlineStyles[] = $pathToInlineStyle;
+        $style = file_get_contents($pathToInlineStyle);
+        $this->_inlineStyles[$id] = (object) [
+            'file' => $pathToInlineStyle,
+            'trace' => debug_backtrace(),
+            'style' => $style
+        ];
     }
 
-    public function loadInlineScript($pathToInlineScript)
+    public function addInlineScript($id, $pathToInlineScript)
     {
-        $this->_inlineScripts[] = $pathToInlineScript;
+        $script = file_get_contents($pathToInlineScript);
+        $this->_inlineScripts[$id] = (object) [
+            'file' => $pathToInlineScript,
+            'trace' => debug_backtrace(),
+            'style' => $script
+        ];
     }
 
     public function getTemplate($id)
@@ -87,24 +100,41 @@ class View
         return $this->_inlineScripts;
     }
 
-    public function render($templateId, $model)
+    public function render($templateId)
     {
+        //initialize partials into mustache templates.
         $partials = [];
-        foreach ($this->_partials as $id => $partial) {
+        foreach ($this->getPartials() as $id => $partial) {
             $partials[$id] = $partial->partial;
         }
         $mustache = new Mustache_Engine([
             'partials' => $partials
         ]);
 
+        //initalize inline styles
+        $this->model->inlineStyles = '<style type="text/css">' . "\n";
+        foreach ($this->getInlineStyles() as $style) {
+            $this->model->inlineStyles .= $style->style;
+            $this->model->inlineStyles .= "\n";
+        }
+        $this->model->inlineStyles .= '</style>';
+
+        //initialize inline scripts
+        $this->model->inlineScripts = '<script type="text/javascript">' . "\n";
+        foreach ($this->getInlineScripts() as $script) {
+            $this->model->inlineScripts .= $script->style;
+            $this->model->inlineScripts .= "\n";
+        }
+        $this->model->inlineScripts .= '</script>';
+
         //add template and model data to render debug panel.
         $renderDebugPanel = $this->_debug->getPanel(FireBugPanelRender::ID);
         $renderDebugPanel->setTemplateId($templateId);
-        $renderDebugPanel->setModel($model);
+        $renderDebugPanel->setModel($this->model);
 
-        $model->debugPanel = $this->_debug->render(false);
+        $this->model->debugPanel = $this->_debug->render(false);
         $mustacheTemplate = $this->getTemplate($templateId);
-        return $mustache->render($mustacheTemplate, $model);
+        return $mustache->render($mustacheTemplate, $this->model);
     }
 
 }

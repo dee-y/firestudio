@@ -1,0 +1,54 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+}
+
+#admin-header {
+    background-color: #3c8dbc;
+    display: block;
+    width: 100%;
+}
+
+#admin-header .logo {
+    font-family: "Courier New", Courier, monospace;
+    -webkit-transition: width .3s ease-in-out;
+    -o-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+    display: block;
+    width: 230px;
+    height: 50px;
+    text-align: center;
+    float: left;
+    overflow: hidden;
+    background-color: #367fa9;
+    color: #ececec;
+    text-decoration: none;
+    margin: 0;
+    line-height: 50px;
+    font-size: 20px;
+}
+
+#admin-header .logo .inner {
+    padding: 0 15px;
+    display: block;
+    height: 100%;
+}
+
+#admin-header .navbar {
+    -webkit-transition: margin-left .3s ease-in-out;
+    -o-transition: margin-left .3s ease-in-out;
+    transition: margin-left .3s ease-in-out;
+    margin-bottom: 0;
+    margin-left: 230px;
+    border: none;
+    min-height: 50px;
+    border-radius: 0;
+}

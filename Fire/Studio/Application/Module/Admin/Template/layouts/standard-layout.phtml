@@ -1,2 +1,42 @@
-<h1>Layout</h1>
-{{{debugPanel}}}
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        {{>fire.studio.partial.html.head}}
+        {{{inlineStyles}}}
+    </head>
+    <body>
+        <header id="admin-header">
+            <a href="{{adminHomeUrl}}" class="logo">
+                <span class="inner">
+                    Fire<strong>STUDIO</strong>
+                </div>
+            </a>
+            <nav class="navbar">
+
+            </nav>
+        </header>
+        <aside id="admin-sidebar">
+            <div class="sidebar-nav">
+                {{#adminMenu}}
+                <ul class="sidebar-nav-menu">
+                    {{#.}}
+                    <li>
+                        <a href="{{url}}">{{title}}</a>
+                    </li>
+                    {{/.}}
+                </ul>
+                {{/adminMenu}}
+            </div>
+        </aside>
+        <div id="admin-main">
+            <div class="admin-main-inner">
+                {{>fire.studio.admin.page}}
+            </div>
+        </div>
+        <footer id="admin-footer">
+            {{{debugPanel}}}
+        </footer>
+        {{{inlineScripts}}}
+
+    </body>
+</html>

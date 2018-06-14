@@ -11,6 +11,7 @@ use \Fire\Bug\Panel\Config as FireBugPanelConfig;
 use \Fire\Sql;
 use \Fire\Studio\Router;
 use \Fire\Bug\Panel\Router as FireBugPanelRouter;
+use \Fire\Studio\View\Model as ViewModel;
 use \Fire\Studio\View;
 use \Fire\Bug\Panel\View as FireBugPanelView;
 use \Fire\Bug\Panel\Modules as FireBugPanelModules;
@@ -27,6 +28,7 @@ class Studio
     const INJECTOR_DATABASE = 'fire.studio.db';
     const INJECTOR_ROUTER = 'fire.studio.router';
     const INJECTOR_VIEW = 'fire.studio.view';
+    const INJECTOR_MODEL = 'fire.studio.model';
 
     private $_config;
     private $_db;
@@ -43,6 +45,7 @@ class Studio
         $this->_initDb();
         $this->_initModulesDebug();
         $this->_initRouter();
+        $this->_initViewModel();
         $this->_initView();
         $this->_initRenderDebug();
         $this->_modules = [];
@@ -53,10 +56,10 @@ class Studio
         $this->_config->addConfigFile($pathToJsonConfig);
     }
 
-    public function addModule(Module $module)
+    public function addModule($moduleClass)
     {
-        $moduleClass = get_class($module);
         if (!isset($this->_modules[$moduleClass])) {
+            $module = new $moduleClass();
             $module->init();
             $this->_modules[$moduleClass] = $module;
             $this->_debug->getPanel(FireBugPanelModules::ID)->addModule($moduleClass, debug_backtrace());
@@ -68,7 +71,8 @@ class Studio
         $this->_initModules();
         $this->_setupRoutes();
         $this->_resolveRoute();
-        $this->_invokeModuleControllerAction();
+        $this->_runModules();
+        $this->_invokeControllerAction();
     }
 
     /**
@@ -179,6 +183,11 @@ class Studio
         $this->_debug->addPanel(new FireBugPanelModules());
     }
 
+    private function _initViewModel()
+    {
+        $this->injector->set(self::INJECTOR_MODEL, new ViewModel());
+    }
+
     private function _initView()
     {
         $this->injector->set(self::INJECTOR_VIEW, new View());
@@ -203,8 +212,7 @@ class Studio
         $config = $this->_config->getConfig();
         $modules = (isset($config->modules)) ? $config->modules : [];
         foreach ($modules as $module) {
-            $addModule = new $module();
-            $this->addModule($addModule);
+            $this->addModule($module);
         }
     }
 
@@ -220,16 +228,22 @@ class Studio
     private function _resolveRoute()
     {
         $this->_router->resolve();
-    }
 
-    private function _invokeModuleControllerAction()
-    {
         $module = $this->_router->getModule();
         if ($module) {
-            $addModule = new $module();
-            $this->addModule($addModule);
+            $this->addModule($module);
         }
+    }
 
+    private function _runModules()
+    {
+        foreach ($this->_modules as $module) {
+            $module->run();
+        }
+    }
+
+    private function _invokeControllerAction()
+    {
         $controllerClass = $this->_router->getController();
         $action = $this->_router->getAction();
         if ($controllerClass && $action) {
