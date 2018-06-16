@@ -12,15 +12,10 @@ class View
     use \Fire\Studio\Injector;
 
     private $_debug;
-
     private $_config;
-
     private $_templates;
-
     private $_partials;
-
     private $_inlineStyles;
-
     private $_inlineScripts;
 
     public $model;
@@ -37,22 +32,24 @@ class View
         $this->_inlineScripts = [];
     }
 
-    public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
+    public function loadTemplate($id, $pathToTemplate)
     {
         $template = file_get_contents($pathToTemplate);
-        if (!$loadAsPartial) {
-            $this->_templates[$id] = (object) [
-                'file' => $pathToTemplate,
-                'trace' => debug_backtrace(),
-                'template' => $template
-            ];
-        } else {
-            $this->_partials[$id] = (object) [
-                'file' => $pathToTemplate,
-                'trace' => debug_backtrace(),
-                'partial' => $template
-            ];
-        }
+        $this->_templates[$id] = (object) [
+            'file' => $pathToTemplate,
+            'trace' => debug_backtrace(),
+            'template' => $template
+        ];
+    }
+
+    public function loadPartial($id, $pathToPartial)
+    {
+        $template = file_get_contents($pathToPartial);
+        $this->_partials[$id] = (object) [
+            'file' => $pathToPartial,
+            'trace' => debug_backtrace(),
+            'partial' => $template
+        ];
     }
 
     public function addInlineStyle($id, $pathToInlineStyle)
@@ -82,7 +79,7 @@ class View
 
     public function getPartial($id)
     {
-        return (isset($this->_partials[$id])) ? $this->_partials[$id] : '';
+        return (isset($this->_partials[$id]->partial)) ? $this->_partials[$id]->partial : '';
     }
 
     public function getTemplates()

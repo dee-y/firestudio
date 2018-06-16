@@ -2,61 +2,29 @@
 
 namespace Fire\Studio;
 
+use \Fire\Studio\BaseModuleController;
 use \Fire\Studio;
 
-class Controller {
+class Controller extends BaseModuleController {
 
-    use \Fire\Studio\Injector;
-
-    private $_config;
-    private $_view;
-    public $model;
+    private $_layoutTemplate;
 
     public function __construct()
     {
-        $this->_fireInjector();
-        $this->_config = $this->injector->get(Studio::INJECTOR_CONFIG);
-        $this->_view = $this->injector->get(Studio::INJECTOR_VIEW);
-        $this->model = $this->injector->get(Studio::INJECTOR_MODEL);
+        parent::__construct();
+        $this->_layoutTemplate = '';
     }
 
-    public function init()
-    {
+    public function init() {}
 
+    public function setLayout($templateId)
+    {
+        $this->_layoutTemplate = $templateId;
     }
 
-    public function loadConfig($pathToConfig)
+    public function renderHtml()
     {
-        $this->_config->addConfigFile($pathToConfig);
-    }
-
-    public function loadTemplate($id, $pathToTemplate, $loadAsPartial = false)
-    {
-        $this->_view->loadTemplate($id, $pathToTemplate, $loadAsPartial);
-    }
-
-    public function loadPartial($id, $pathToPartial)
-    {
-        $this->_view->loadTemplate($id, $pathToPartial, true);
-    }
-
-    public function addInlineStyle($id, $pathToInlineStyle)
-    {
-        $this->_view->addInlineStyle($id, $pathToInlineStyle);
-    }
-
-    public function addInlineScript($id, $pathToInlineScript)
-    {
-        $this->_view->addInlineScript($id, $pathToInlineScript);
-    }
-
-    public function getTemplate($id)
-    {
-        return $this->_view->getTemplate($id);
-    }
-
-    public function render($layout)
-    {
-        return $this->_view->render($layout, $this->model);
+        $view = $this->injector->get(Studio::INJECTOR_VIEW);
+        return $view->render($this->_layoutTemplate, $this->model);
     }
 }

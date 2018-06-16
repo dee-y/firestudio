@@ -14,7 +14,7 @@ class ApplicationModule extends Module {
         $this->loadConfig(__DIR__ . '/ApplicationModule/Config/module.json');
     }
 
-    public function init()
+    public function run()
     {
         $this->_loadPartials();
         $this->_loadTemplates();
@@ -22,10 +22,9 @@ class ApplicationModule extends Module {
 
     private function _loadPartials()
     {
-        $this->loadTemplate(
+        $this->loadPartial(
             self::TEMPLATE_APPLICATION_PARTIAL_HTML_HEAD,
-            __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml',
-            true
+            __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
         );
     }
 

@@ -83,7 +83,7 @@ class Config
                 is_array($obj1)
                 && is_array($obj2)
             ) {
-                $obj1 = array_merge_recursive($obj1, $obj2);
+                $obj1 = array_unique(array_merge_recursive($obj1, $obj2), SORT_REGULAR);
             } else {
                 $obj1 = $obj2;
             }

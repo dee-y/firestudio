@@ -21,19 +21,11 @@ class AdminModule extends Module {
 
     public function init()
     {
-        $this->_loadPartials();
         $this->_loadTemplates();
+        $this->_loadPartials();
         $this->_addInlineStyles();
         $this->_addInlineScripts();
         $this->_initViewModel();
-    }
-
-    private function _loadPartials()
-    {
-        $this->loadPartial(
-            ApplicationModule::TEMPLATE_APPLICATION_PARTIAL_HTML_HEAD,
-            __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
-        );
     }
 
     private function _loadTemplates()
@@ -41,6 +33,14 @@ class AdminModule extends Module {
         $this->loadTemplate(
             self::TEMPLATE_ADMIN_LAYOUT,
             __DIR__ . '/AdminModule/Template/layouts/standard-layout.phtml'
+        );
+    }
+
+    private function _loadPartials()
+    {
+        $this->loadPartial(
+            ApplicationModule::TEMPLATE_APPLICATION_PARTIAL_HTML_HEAD,
+            __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
         );
     }
 
@@ -60,13 +60,11 @@ class AdminModule extends Module {
     private function _initViewModel()
     {
         $router = $this->injector->get(Studio::INJECTOR_ROUTER);
-        $this->model->adminMenu = [];
         $this->model->adminHomeUrl = $router->getUrl(self::ADMIN_DASHBOARD_URL);
 
-        $this->model->adminMenu[] =  new MenuItem(
-            self::ADMIN_DASHBOARD_URL,
-            'Dashboard',
-            $router->getUrl(self::ADMIN_DASHBOARD_URL)
-        );
+        if (!isset($this->model->adminMenu)) {
+            $this->model->adminMenu = [];
+        }
+        $this->model->adminMenu[] =  new MenuItem('Dashboard', self::ADMIN_DASHBOARD_URL);
     }
 }

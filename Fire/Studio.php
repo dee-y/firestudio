@@ -18,6 +18,25 @@ use \Fire\Bug\Panel\Modules as FireBugPanelModules;
 use \Fire\Bug\Panel\Render as FireBugPanelRender;
 use \PDO;
 
+/**
+ * This class is responsible for bootstrapping together a FireStudio Application.
+ *
+ * Process:
+ * SETUP
+ * 1. Initialize Injector and add Debug, Config, Router, Model, View, and DB objects.
+ * 2. Initialize FireBug Debug Panel and add FireStudio specific panels.
+ * 3. Adds configs to Config object.
+ * 4. Inializes a database connection based on the PDO config.
+ * RUN
+ * 1. Adds modules from the Config object. NOTE: when a module is added,
+ *    its module::config() method will be invoked.
+ * 2. Registers routes from the Config object.
+ * 3. Resolves the route and adds the module registered with the route.
+ *    NOTE: when a module is added, its module::config() method will be invoked.
+ * 4. Init all modules by invoking the module::init() method.
+ * 5. Invokes module::run() based on the module registered with the resolved route
+ *    then invokes the controller and action based on the resolved route.
+ */
 class Studio
 {
 
@@ -25,10 +44,10 @@ class Studio
 
     const INJECTOR_DEBUG_PANEL = 'fire.studio.debug';
     const INJECTOR_CONFIG = 'fire.studio.config';
-    const INJECTOR_DATABASE = 'fire.studio.db';
     const INJECTOR_ROUTER = 'fire.studio.router';
-    const INJECTOR_VIEW = 'fire.studio.view';
     const INJECTOR_MODEL = 'fire.studio.model';
+    const INJECTOR_VIEW = 'fire.studio.view';
+    const INJECTOR_DATABASE = 'fire.studio.db';
 
     private $_config;
     private $_debug;
@@ -46,6 +65,15 @@ class Studio
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
         $this->_modules = [];
+    }
+
+    public function run()
+    {
+        $this->_addModulesFromConfig();
+        $this->_setupRoutesFromConfig();
+        $this->_resolveRouteAndAddModule();
+        $this->_initAllModules();
+        $this->_invokeModuleRunControllerAction();
     }
 
     public function loadConfig($pathToJsonConfig)
@@ -66,14 +94,6 @@ class Studio
     public function getModule($moduleClass)
     {
         return $this->_modules[$moduleClass];
-    }
-
-    public function run()
-    {
-        $this->_initModulesFromConfig();
-        $this->_setupRoutesFromConfig();
-        $this->_resolveRouteInitModule();
-        $this->_invokeControllerAction();
     }
 
     /**
@@ -184,12 +204,15 @@ class Studio
      * ================================================================================
      */
 
-    private function _initModulesFromConfig()
+    private function _addModulesFromConfig($addedModules = [])
     {
         $config = $this->_config->getConfig();
         $modules = (isset($config->modules)) ? $config->modules : [];
         foreach ($modules as $module) {
             $this->addModule($module);
+        }
+        if ($modules !== $addedModules) {
+            $this->_addModulesFromConfig($modules);
         }
     }
 
@@ -202,26 +225,26 @@ class Studio
         }
     }
 
-    private function _resolveRouteInitModule()
+    private function _resolveRouteAndAddModule()
     {
         $this->_router->resolve();
-
         $moduleClass = $this->_router->getModule();
         if ($moduleClass) {
             $this->addModule($moduleClass);
         }
-        $this->getModule($moduleClass)->init();
     }
 
-    private function _runModules()
+    private function _initAllModules()
     {
         foreach ($this->_modules as $module) {
-            $module->run();
+            $module->init();
         }
     }
 
-    private function _invokeControllerAction()
+    private function _invokeModuleRunControllerAction()
     {
+        $moduleClass = $this->_router->getModule();
+        $this->getModule($moduleClass)->run();
         $controllerClass = $this->_router->getController();
         $action = $this->_router->getAction();
         if ($controllerClass && $action) {
