@@ -7,7 +7,6 @@
     "routes": {},
     "modules": [
         "Fire\\Studio\\Application\\Module\\ApplicationModule",
-        "Fire\\Studio\\Application\\Module\\AdminModule",
-        "SBM\\Module\\AdminModule"
+        "Fire\\Studio\\Application\\Module\\AdminModule"
     ]
 }
