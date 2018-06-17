@@ -1,6 +1,9 @@
 {
     "debug": false,
     "pdo": false,
+    "plugins": [
+        "Fire\\Studio\\Application\\Plugin\\AuthenticationPlugin"
+    ],
     "modules": [],
     "routes": {},
     "logo": "Fire<strong>STUDIO</strong>",

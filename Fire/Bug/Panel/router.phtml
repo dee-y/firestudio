@@ -60,7 +60,7 @@ $routeDebug = $this->getRouterDebug();
         <tr>
             <td><?php echo $path; ?></td>
             <td><?php echo $config->id; ?></td>
-            <td><?php echo $config->module; ?></td>
+            <td><?php echo ($config->module) ? $config->module : 'false'; ?></td>
             <td><?php echo $config->controller; ?></td>
             <td><?php echo $config->action; ?></td>
         </tr>

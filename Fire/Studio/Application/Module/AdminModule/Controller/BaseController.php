@@ -8,7 +8,7 @@ use \Fire\Studio\Application\Module\AdminModule;
 abstract class BaseController extends Controller
 {
 
-    public function init()
+    public function run()
     {
         $this->model->title = 'FireStudio Admin';
         $this->setLayout(AdminModule::TEMPLATE_ADMIN_LAYOUT);

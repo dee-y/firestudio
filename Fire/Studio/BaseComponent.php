@@ -2,7 +2,7 @@
 
 namespace Fire\Studio;
 
-use Fire\Studio;
+use \Fire\Studio;
 
 abstract class BaseComponent
 {
@@ -13,12 +13,6 @@ abstract class BaseComponent
     public function __construct()
     {
         $this->model = $this->injector()->get(Studio::INJECTOR_MODEL);
-    }
-
-    public function loadConfig($pathToConfig)
-    {
-        $config = $this->injector()->get(Studio::INJECTOR_CONFIG);
-        $config->addConfigFile($pathToConfig);
     }
 
     public function loadTemplate($id, $pathToTemplate)

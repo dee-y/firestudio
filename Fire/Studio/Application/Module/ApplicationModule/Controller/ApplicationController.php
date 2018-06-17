@@ -9,7 +9,7 @@ class ApplicationController extends Controller {
 
     const TEMPLATE_APPLICATION_NOTFOUND = 'fire.studio.error.notFound';
 
-    public function init()
+    public function run()
     {
         $this->setLayout(ApplicationModule::TEMPLATE_APPLICATION_LAYOUT);
     }

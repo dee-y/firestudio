@@ -6,11 +6,13 @@ use \PDO;
 use \Fire\Bug;
 use \Fire\Bug\Panel\Config as FireBugPanelConfig;
 use \Fire\Bug\Panel\Injector as FireBugPanelInjector;
+use \Fire\Bug\Panel\Plugins as FireBugPanelPlugins;
 use \Fire\Bug\Panel\Modules as FireBugPanelModules;
 use \Fire\Bug\Panel\Render as FireBugPanelRender;
 use \Fire\Bug\Panel\Router as FireBugPanelRouter;
 use \Fire\Bug\Panel\View as FireBugPanelView;
 use \Fire\Studio\Module;
+use \Fire\Studio\Plugin;
 use \Fire\Studio\Service\Config;
 use \Fire\Studio\Service\Model as ViewModel;
 use \Fire\Studio\Service\Router;
@@ -60,21 +62,26 @@ class Studio
 
     public function __construct($appJsonConfig)
     {
+        $this->_modules = [];
+        $this->_plugins = [];
         $this->_initInjector();
         $this->_initDebug();
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
-        $this->_modules = [];
-        $this->_plugins = [];
+        $this->_initPluginsModules();
     }
 
     public function run()
     {
-        $this->_addModulesFromConfig();
-        $this->_setupRoutesFromConfig();
-        $this->_resolveRouteAndAddModule();
-        $this->_loadAllModules();
-        $this->_invokeModuleRunControllerAction();
+        $this->_invokeAllPluginsMethod('preRoute');
+        $this->_setupRoutesFromConfigAndResolveRoute();
+        $this->_invokeAllPluginsMethod('postRoute');
+        $this->_invokeAllPluginsMethod('preModule');
+        $this->_runResovledModule();
+        $this->_invokeAllPluginsMethod('postModule');
+        $this->_invokeAllPluginsMethod('preController');
+        $this->_runResolvedControllerAction();
+        $this->_invokeAllPluginsMethod('postController');
     }
 
     public function loadConfig($pathToJsonConfig)
@@ -82,10 +89,33 @@ class Studio
         $this->_config->addConfigFile($pathToJsonConfig);
     }
 
+    public function addPlugin($pluginClass)
+    {
+        if (!isset($this->_plugins[$pluginClass])) {
+            $plugin = new $pluginClass();
+            if (!$plugin instanceof Plugin) {
+                throw new StudioException('Plugin not instance of \Fire\Studio\Plugin.');
+            }
+
+            $plugin->config();
+            $this->_plugins[$pluginClass] = $plugin;
+            $this->_debug->getPanel(FireBugPanelPlugins::ID)->addPlugin($pluginClass, debug_backtrace());
+        }
+    }
+
+    public function getPlugin($pluginClass)
+    {
+        return isset($this->_plugins[$pluginClass]) ? $this->_plugins[$pluginClass] : false;
+    }
+
     public function addModule($moduleClass)
     {
         if (!isset($this->_modules[$moduleClass])) {
             $module = new $moduleClass();
+            if (!$module instanceof Module) {
+                throw new StudioException('Module not instance of \Fire\Studio\Module.');
+            }
+
             $module->config();
             $this->_modules[$moduleClass] = $module;
             $this->_debug->getPanel(FireBugPanelModules::ID)->addModule($moduleClass, debug_backtrace());
@@ -94,7 +124,7 @@ class Studio
 
     public function getModule($moduleClass)
     {
-        return $this->_modules[$moduleClass];
+        return isset($this->_modules[$moduleClass]) ? $this->_modules[$moduleClass] : false;
     }
 
     /**
@@ -126,6 +156,7 @@ class Studio
          $this->_debug->addPanel(new FireBugPanelInjector());
          $this->_debug->addPanel(new FireBugPanelConfig());
          $this->_debug->addPanel(new FireBugPanelRouter());
+         $this->_debug->addPanel(new FireBugPanelPlugins());
          $this->_debug->addPanel(new FireBugPanelModules());
          $this->_debug->addPanel(new FireBugPanelView());
          $this->_debug->addPanel(new FireBugPanelRender());
@@ -199,59 +230,102 @@ class Studio
         }
     }
 
+    private function _initPluginsModules($addedPlugins = [], $addedModules = [])
+    {
+        $config = $this->_config->getConfig();
+        //load plugins from config
+        $plugins = (isset($config->plugins)) ? $config->plugins : [];
+        foreach ($plugins as $plugin) {
+            if (!$this->getPlugin($plugin)) {
+                $this->addPlugin($plugin);
+            }
+        }
+        //load modules from config
+        $modules = (isset($config->modules)) ? $config->modules : [];
+        foreach ($modules as $module) {
+            if (!$this->getModule($module)) {
+                $this->addModule($module);
+            }
+        }
+        //since a plugin or module could load in a config and change the plugins
+        //or modules we want to load in we will run this method again just to
+        //make sure we got all the plugins.
+        if ($plugins !== $addedPlugins || $modules !== $addedModules) {
+            $this->_initPluginsModules($plugins, $modules);
+        }
+    }
+
     /**
      * ================================================================================
      * Run Processes
      * ================================================================================
      */
 
-    private function _addModulesFromConfig($addedModules = [])
-    {
-        $config = $this->_config->getConfig();
-        $modules = (isset($config->modules)) ? $config->modules : [];
-        foreach ($modules as $module) {
-            $this->addModule($module);
-        }
-        if ($modules !== $addedModules) {
-            $this->_addModulesFromConfig($modules);
-        }
-    }
-
-    private function _setupRoutesFromConfig()
+    private function _setupRoutesFromConfigAndResolveRoute()
     {
         $config = $this->_config->getConfig();
         $routes = (isset($config->routes)) ? $config->routes : [];
         foreach ($routes as $id => $route) {
             $this->_router->when($route->path, $route->module, $route->controller, $route->action, $id);
         }
-    }
 
-    private function _resolveRouteAndAddModule()
-    {
+        //resolve route
         $this->_router->resolve();
+
+        //lazy load module from resolved route.
         $moduleClass = $this->_router->getModule();
         if ($moduleClass) {
             $this->addModule($moduleClass);
         }
+        //load all modules
+        $this->_invokeAllModulesMethod('load');
     }
 
-    private function _loadAllModules()
+    private function _runResovledModule()
     {
-        foreach ($this->_modules as $module) {
-            $module->load();
+        $moduleClass = $this->_router->getModule();
+        $module = $this->getModule($moduleClass);
+        if ($module) {
+            $module->run();
         }
     }
 
-    private function _invokeModuleRunControllerAction()
+    private function _runResolvedControllerAction()
     {
-        $moduleClass = $this->_router->getModule();
-        $this->getModule($moduleClass)->run();
         $controllerClass = $this->_router->getController();
         $action = $this->_router->getAction();
         if ($controllerClass && $action) {
             $controller = new $controllerClass();
-            $controller->init();
+            $controller->run();
             $controller->{$action}();
+            $controller->postRun();
+        }
+
+        //module::postRun()
+        $moduleClass = $this->_router->getModule();
+        $module = $this->getModule($moduleClass);
+        if ($module) {
+            $module->postRun();
+        }
+    }
+
+    /**
+     * ================================================================================
+     * Misc Methods
+     * ================================================================================
+     */
+
+    private function _invokeAllPluginsMethod($method)
+    {
+        foreach ($this->_plugins as $plugin) {
+            $plugin->{$method}();
+        }
+    }
+
+    private function _invokeAllModulesMethod($method)
+    {
+        foreach ($this->_modules as $module) {
+            $module->{$method}();
         }
     }
 

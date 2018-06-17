@@ -18,7 +18,9 @@ abstract class Controller extends BaseComponent {
         $this->_layoutTemplate = '';
     }
 
-    public function init() {}
+    public function run() {}
+
+    public function postRun() {}
 
     public function setLayout($templateId)
     {
@@ -39,5 +41,10 @@ abstract class Controller extends BaseComponent {
     {
         $view = $this->injector()->get(Studio::INJECTOR_VIEW);
         return $view->render($this->_layoutTemplate, $this->model);
+    }
+
+    public function renderDebugPanel()
+    {
+        echo $this->injector()->get(Studio::INJECTOR_DEBUG_PANEL)->render();
     }
 }

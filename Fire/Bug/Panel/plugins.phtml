@@ -1,0 +1,15 @@
+<?php
+    $loadedPlugins = $this->getLoadedPlugins();
+?>
+<?php if ($loadedPlugins) { ?>
+    <hr class="fs-hr-dotted" style="margin-top: 0;">
+    <?php foreach ($loadedPlugins as $plugin) { ?>
+        <span class="fs-label"><strong>Loaded: </strong><?php echo $plugin->module; ?></span>
+        <span class="fs-label">
+            <?php echo $this->renderTrace($plugin->trace); ?>
+        </span>
+        <hr class="fs-hr-dotted">
+<?php } ?>
+<?php } else { ?>
+<span class="fs-label">No Plugins Loaded...</span>
+<?php } ?>

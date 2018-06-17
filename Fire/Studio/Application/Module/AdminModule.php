@@ -18,7 +18,7 @@ class AdminModule extends Module {
         $this->loadConfig(__DIR__ . '/AdminModule/Config/module.json');
     }
 
-    public function load()
+    public function run()
     {
         $this->_loadTemplates();
         $this->_loadPartials();
