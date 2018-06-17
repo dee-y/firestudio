@@ -6,10 +6,9 @@ use Fire\Injector as FireInjector;
 
 trait Injector {
 
-    public $injector;
-
-    private function _fireInjector() {
-        $this->injector = FireInjector::instance();
+    public function injector()
+    {
+        return FireInjector::instance();
     }
 
 }

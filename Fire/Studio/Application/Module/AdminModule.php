@@ -10,7 +10,6 @@ use \Fire\Studio;
 class AdminModule extends Module {
 
     const TEMPLATE_ADMIN_LAYOUT = 'fire.studio.admin.layout';
-    const PARTIAL_ADMIN_PAGE = 'fire.studio.admin.page';
     const ADMIN_STANDARD_LAYOUT_STYLE = 'admin.standardStyle';
     const ADMIN_DASHBOARD_URL = 'admin.dashboard';
 
@@ -19,7 +18,7 @@ class AdminModule extends Module {
         $this->loadConfig(__DIR__ . '/AdminModule/Config/module.json');
     }
 
-    public function init()
+    public function load()
     {
         $this->_loadTemplates();
         $this->_loadPartials();
@@ -59,7 +58,7 @@ class AdminModule extends Module {
 
     private function _initViewModel()
     {
-        $router = $this->injector->get(Studio::INJECTOR_ROUTER);
+        $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $this->model->adminHomeUrl = $router->getUrl(self::ADMIN_DASHBOARD_URL);
 
         if (!isset($this->model->adminMenu)) {

@@ -2,21 +2,21 @@
 
 namespace Fire;
 
-use \Fire\StudioException;
-use \Fire\Studio\Module;
+use \PDO;
 use \Fire\Bug;
-use \Fire\Bug\Panel\Injector as FireBugPanelInjector;
-use \Fire\Studio\Config;
 use \Fire\Bug\Panel\Config as FireBugPanelConfig;
-use \Fire\Sql;
-use \Fire\Studio\Router;
-use \Fire\Bug\Panel\Router as FireBugPanelRouter;
-use \Fire\Studio\View\Model as ViewModel;
-use \Fire\Studio\View;
-use \Fire\Bug\Panel\View as FireBugPanelView;
+use \Fire\Bug\Panel\Injector as FireBugPanelInjector;
 use \Fire\Bug\Panel\Modules as FireBugPanelModules;
 use \Fire\Bug\Panel\Render as FireBugPanelRender;
-use \PDO;
+use \Fire\Bug\Panel\Router as FireBugPanelRouter;
+use \Fire\Bug\Panel\View as FireBugPanelView;
+use \Fire\Studio\Module;
+use \Fire\Studio\Service\Config;
+use \Fire\Studio\Service\Model as ViewModel;
+use \Fire\Studio\Service\Router;
+use \Fire\Studio\Service\View;
+use \Fire\StudioException;
+use \Fire\Sql;
 
 /**
  * This class is responsible for bootstrapping together a FireStudio Application.
@@ -33,7 +33,7 @@ use \PDO;
  * 2. Registers routes from the Config object.
  * 3. Resolves the route and adds the module registered with the route.
  *    NOTE: when a module is added, its module::config() method will be invoked.
- * 4. Init all modules by invoking the module::init() method.
+ * 4. Load all modules by invoking the module::load() method.
  * 5. Invokes module::run() based on the module registered with the resolved route
  *    then invokes the controller and action based on the resolved route.
  */
@@ -56,15 +56,16 @@ class Studio
     private $_view;
     private $_db;
     private $_modules;
+    private $_plugins;
 
     public function __construct($appJsonConfig)
     {
-        $this->_fireInjector();
         $this->_initInjector();
         $this->_initDebug();
         $this->_initConfig($appJsonConfig);
         $this->_initDb();
         $this->_modules = [];
+        $this->_plugins = [];
     }
 
     public function run()
@@ -72,7 +73,7 @@ class Studio
         $this->_addModulesFromConfig();
         $this->_setupRoutesFromConfig();
         $this->_resolveRouteAndAddModule();
-        $this->_initAllModules();
+        $this->_loadAllModules();
         $this->_invokeModuleRunControllerAction();
     }
 
@@ -104,16 +105,16 @@ class Studio
 
     private function _initInjector()
     {
-        $this->injector->set(self::INJECTOR_DEBUG_PANEL, Bug::get());
-        $this->_debug = $this->injector->get(self::INJECTOR_DEBUG_PANEL);
-        $this->injector->set(self::INJECTOR_CONFIG, new Config());
-        $this->_config = $this->injector->get(self::INJECTOR_CONFIG);
-        $this->injector->set(self::INJECTOR_ROUTER, new Router());
-        $this->_router = $this->injector->get(self::INJECTOR_ROUTER);
-        $this->injector->set(self::INJECTOR_MODEL, new ViewModel());
-        $this->_model = $this->injector->get(self::INJECTOR_MODEL);
-        $this->injector->set(self::INJECTOR_VIEW, new View());
-        $this->_view = $this->injector->get(self::INJECTOR_VIEW);
+        $this->injector()->set(self::INJECTOR_DEBUG_PANEL, Bug::get());
+        $this->_debug = $this->injector()->get(self::INJECTOR_DEBUG_PANEL);
+        $this->injector()->set(self::INJECTOR_CONFIG, new Config());
+        $this->_config = $this->injector()->get(self::INJECTOR_CONFIG);
+        $this->injector()->set(self::INJECTOR_ROUTER, new Router());
+        $this->_router = $this->injector()->get(self::INJECTOR_ROUTER);
+        $this->injector()->set(self::INJECTOR_MODEL, new ViewModel());
+        $this->_model = $this->injector()->get(self::INJECTOR_MODEL);
+        $this->injector()->set(self::INJECTOR_VIEW, new View());
+        $this->_view = $this->injector()->get(self::INJECTOR_VIEW);
     }
 
     private function _initDebug()
@@ -193,8 +194,8 @@ class Studio
             } else {
                 $pdo = new PDO($dns);
             }
-            $this->injector->set(self::INJECTOR_DATABASE, new Sql($pdo));
-            $this->_db = $this->injector->get(self::INJECTOR_DATABASE);
+            $this->injector()->set(self::INJECTOR_DATABASE, new Sql($pdo));
+            $this->_db = $this->injector()->get(self::INJECTOR_DATABASE);
         }
     }
 
@@ -234,10 +235,10 @@ class Studio
         }
     }
 
-    private function _initAllModules()
+    private function _loadAllModules()
     {
         foreach ($this->_modules as $module) {
-            $module->init();
+            $module->load();
         }
     }
 

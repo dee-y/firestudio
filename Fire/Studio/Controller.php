@@ -2,10 +2,13 @@
 
 namespace Fire\Studio;
 
-use \Fire\Studio\BaseModuleController;
+use \Fire\Studio\BaseComponent;
 use \Fire\Studio;
 
-class Controller extends BaseModuleController {
+abstract class Controller extends BaseComponent {
+
+    const FIRESTUDIO_PAGE_CONTENT = 'fire.studio.page.content';
+    const FIRESTUDIO_PAGE_SIDEBAR = 'fire.studio.page.sidebar';
 
     private $_layoutTemplate;
 
@@ -22,9 +25,19 @@ class Controller extends BaseModuleController {
         $this->_layoutTemplate = $templateId;
     }
 
+    public function setPageTemplate($pathToTemplate)
+    {
+        $this->loadPartial(self::FIRESTUDIO_PAGE_CONTENT, $pathToTemplate);
+    }
+
+    public function setSidebarTemplate($pathToTemplate)
+    {
+        $this->loadPartial(self::FIRESTUDIO_PAGE_SIDEBAR, $pathToTemplate);
+    }
+
     public function renderHtml()
     {
-        $view = $this->injector->get(Studio::INJECTOR_VIEW);
+        $view = $this->injector()->get(Studio::INJECTOR_VIEW);
         return $view->render($this->_layoutTemplate, $this->model);
     }
 }

@@ -2,15 +2,13 @@
 
 namespace Fire\Studio;
 
-use \Fire\Studio\BaseModuleController;
+use \Fire\Studio\BaseComponent;
 
-class Module extends BaseModuleController {
-
-    use \Fire\Studio\Injector;
+abstract class Module extends BaseComponent {
 
     public function config() {}
 
-    public function init() {}
+    public function load() {}
 
     public function run() {}
 }

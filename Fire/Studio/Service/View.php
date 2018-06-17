@@ -1,6 +1,6 @@
 <?php
 
-namespace Fire\Studio;
+namespace Fire\Studio\Service;
 
 use \Mustache_Engine;
 use \Fire\Studio;
@@ -22,10 +22,9 @@ class View
 
     public function __construct()
     {
-        $this->_fireInjector();
-        $this->_debug = $this->injector->get(Studio::INJECTOR_DEBUG_PANEL);
-        $this->_config = $this->injector->get(Studio::INJECTOR_CONFIG);
-        $this->model = $this->injector->get(Studio::INJECTOR_MODEL);
+        $this->_debug = $this->injector()->get(Studio::INJECTOR_DEBUG_PANEL);
+        $this->_config = $this->injector()->get(Studio::INJECTOR_CONFIG);
+        $this->model = $this->injector()->get(Studio::INJECTOR_MODEL);
         $this->_templates = [];
         $this->_partials = [];
         $this->_inlineStyles = [];

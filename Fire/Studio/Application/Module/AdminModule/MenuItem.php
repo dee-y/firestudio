@@ -15,8 +15,7 @@ class MenuItem
 
     public function __construct($title, $id, $params = [])
     {
-        $this->_fireInjector();
-        $router = $this->injector->get(Studio::INJECTOR_ROUTER);
+        $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $this->id = $id;
         $this->title = $title;
         $this->url = $router->getUrl($id, $params);

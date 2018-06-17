@@ -24,12 +24,12 @@ class Injector extends Panel
      */
     public function __construct()
     {
-        $this->_fireInjector();
+        
         parent::__construct(self::ID, self::NAME, __DIR__ . self::TEMPLATE);
     }
 
     public function getInjector()
     {
-        return $this->injector->debug();
+        return $this->injector()->debug();
     }
 }

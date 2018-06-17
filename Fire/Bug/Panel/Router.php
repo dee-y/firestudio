@@ -25,13 +25,13 @@ class Router extends Panel
      */
     public function __construct()
     {
-        $this->_fireInjector();
+        
         parent::__construct(self::ID, self::NAME, __DIR__ . self::TEMPLATE);
     }
 
     public function getRouterDebug()
     {
-        $router = $this->injector->get(Studio::INJECTOR_ROUTER);
+        $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         return (object) [
             'routes' => $router->getRoutes(),
             'route' => $router->getRoute(),

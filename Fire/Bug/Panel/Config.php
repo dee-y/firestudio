@@ -27,8 +27,8 @@ class Config extends Panel
      */
     public function __construct()
     {
-        $this->_fireInjector();
-        $this->_config = $this->injector->get(Studio::INJECTOR_CONFIG);
+        
+        $this->_config = $this->injector()->get(Studio::INJECTOR_CONFIG);
         parent::__construct(self::ID, self::NAME, __DIR__ . self::TEMPLATE);
     }
 

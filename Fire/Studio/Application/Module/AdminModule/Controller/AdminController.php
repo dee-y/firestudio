@@ -4,13 +4,14 @@ namespace Fire\Studio\Application\Module\AdminModule\Controller;
 
 use \Fire\Studio\Controller;
 use \Fire\Studio\Application\Module\AdminModule;
-use \Fire\Studio\Application\Module\AdminModule\Controller\AbstractAdminController;
+use \Fire\Studio\Application\Module\AdminModule\Controller\BaseController;
 
-class AdminController extends AbstractAdminController {
+class AdminController extends BaseController {
 
     public function dashboard()
     {
         $this->setPageTemplate(__DIR__ . '/../Template/admin/dashboard.phtml');
+
         $this->model->title = 'FireStudio Admin:Dashboard';
         echo $this->renderHtml();
     }

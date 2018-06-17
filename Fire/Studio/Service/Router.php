@@ -1,5 +1,5 @@
 <?php
-namespace Fire\Studio;
+namespace Fire\Studio\Service;
 
 class Router {
 

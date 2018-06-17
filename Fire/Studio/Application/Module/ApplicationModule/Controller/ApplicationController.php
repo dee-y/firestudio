@@ -16,10 +16,7 @@ class ApplicationController extends Controller {
 
     public function notFound()
     {
-        $this->loadPartial(
-            self::TEMPLATE_APPLICATION_NOTFOUND,
-            __DIR__ . '/../Template/error/not-found.phtml'
-        );
+        $this->setPageTemplate(__DIR__ . '/../Template/error/not-found.phtml');
         echo $this->renderHtml();
     }
 

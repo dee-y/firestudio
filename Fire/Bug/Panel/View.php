@@ -27,8 +27,8 @@ class View extends Panel
      */
     public function __construct()
     {
-        $this->_fireInjector();
-        $this->_view = $this->injector->get(Studio::INJECTOR_VIEW);
+        
+        $this->_view = $this->injector()->get(Studio::INJECTOR_VIEW);
         parent::__construct(self::ID, self::NAME, __DIR__ . self::TEMPLATE);
     }
 

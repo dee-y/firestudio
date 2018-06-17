@@ -1,6 +1,6 @@
 <?php
 
-namespace Fire\Studio\View;
+namespace Fire\Studio\Service;
 
 use Fire\StudioException;
 
