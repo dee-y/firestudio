@@ -3,10 +3,5 @@
     "pdo": {
         "adapter": "sqlite",
         "location": "/home/johnsonj/Projects/UA1/Fire/firestudio/public/firestudio.db"
-    },
-    "routes": {},
-    "modules": [
-        "Fire\\Studio\\Application\\Module\\ApplicationModule",
-        "Fire\\Studio\\Application\\Module\\AdminModule"
-    ]
+    }
 }

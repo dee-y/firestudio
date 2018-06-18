@@ -3,6 +3,7 @@
 namespace Fire\Studio\Service;
 
 use Fire\StudioException;
+use Fire\Studio\DataMapper;
 
 class Config
 {
@@ -57,38 +58,6 @@ class Config
 
     private function _addConfig($addConfig)
     {
-        $this->_config = $this->_mergeRecursively($this->_config, $addConfig);
-    }
-
-    private function _mergeRecursively($obj1, $obj2) {
-        if (is_object($obj2)) {
-            $keys = array_keys(get_object_vars($obj2));
-            foreach ($keys as $key) {
-                if (
-                    isset($obj1->{$key})
-                    && is_object($obj1->{$key})
-                    && is_object($obj2->{$key})
-                ) {
-                    $obj1->{$key} = $this->_mergeRecursively($obj1->{$key}, $obj2->{$key});
-                } elseif (isset($obj1->{$key})
-                && is_array($obj1->{$key})
-                && is_array($obj2->{$key})) {
-                    $obj1->{$key} = $this->_mergeRecursively($obj1->{$key}, $obj2->{$key});
-                } else {
-                    $obj1->{$key} = $obj2->{$key};
-                }
-            }
-        } elseif (is_array($obj2)) {
-            if (
-                is_array($obj1)
-                && is_array($obj2)
-            ) {
-                $obj1 = array_unique(array_merge_recursive($obj1, $obj2), SORT_REGULAR);
-            } else {
-                $obj1 = $obj2;
-            }
-        }
-
-        return $obj1;
+        $this->_config = DataMapper::mergeObjRecursively($this->_config, $addConfig);
     }
 }

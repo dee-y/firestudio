@@ -4,11 +4,13 @@ namespace Fire\Studio;
 
 use \Fire\Studio\BaseComponent;
 use \Fire\Studio;
+use \Valitron\Validator;
 
 abstract class Controller extends BaseComponent {
 
     const FIRESTUDIO_PAGE_CONTENT = 'fire.studio.page.content';
     const FIRESTUDIO_PAGE_SIDEBAR = 'fire.studio.page.sidebar';
+    const FIELD_VALIDATION_REQUIRED = 'required';
 
     private $_layoutTemplate;
 
@@ -21,6 +23,50 @@ abstract class Controller extends BaseComponent {
     public function run() {}
 
     public function postRun() {}
+
+    public function getFormPost()
+    {
+        return new Validator((array) $this->getPost());
+    }
+
+    public function getFormGet()
+    {
+        return new Validator((array) $this->getGet());
+    }
+
+    public function setSessionErrors($errors)
+    {
+        $_SESSION['fserrors'] = $errors;
+    }
+
+    public function getSessionErrors()
+    {
+        $errors = $_SESSION['fserrors'];
+        $this->clearSessionErrors();
+        return isset($errors) ? $errors : false;
+    }
+
+    public function clearSessionErrors()
+    {
+        unset($_SESSION['fserrors']);
+    }
+
+    public function setSessionMessage($message)
+    {
+        $_SESSION['fsmessage'] = $message;
+    }
+
+    public function getSessionMessage()
+    {
+        $message = $_SESSION['fsmessage'];
+        $this->clearSessionMessage();
+        return isset($message) ? $message : false;
+    }
+
+    public function clearSessionMessage()
+    {
+        unset($_SESSION['fsmessage']);
+    }
 
     public function setLayout($templateId)
     {

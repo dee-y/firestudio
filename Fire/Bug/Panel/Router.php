@@ -25,7 +25,7 @@ class Router extends Panel
      */
     public function __construct()
     {
-        
+
         parent::__construct(self::ID, self::NAME, __DIR__ . self::TEMPLATE);
     }
 
@@ -35,9 +35,10 @@ class Router extends Panel
         return (object) [
             'routes' => $router->getRoutes(),
             'route' => $router->getRoute(),
+            'method' => $router->getRequestMethod(),
+            'module' => $router->getModule(),
             'controller' => $router->getController(),
             'action' => $router->getAction(),
-            'module' => $router->getModule(),
             'variables' => $router->getVariables(),
             'id' => $router->getId()
         ];

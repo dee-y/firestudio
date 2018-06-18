@@ -11,6 +11,10 @@ $routeDebug = $this->getRouterDebug();
     <?php echo ($routeDebug->id) ? $routeDebug->id : 'false'; ?>
 </span>
 <span class="fs-label">
+    <strong>Request Method: </strong>
+    <?php echo ($routeDebug->method) ? $routeDebug->method : 'false'; ?>
+</span>
+<span class="fs-label">
     <strong>Module: </strong>
     <?php echo ($routeDebug->module) ? $routeDebug->module : 'false'; ?>
 </span>

@@ -20,25 +20,6 @@ use \Fire\Studio\Service\View;
 use \Fire\StudioException;
 use \Fire\Sql;
 
-/**
- * This class is responsible for bootstrapping together a FireStudio Application.
- *
- * Process:
- * SETUP
- * 1. Initialize Injector and add Debug, Config, Router, Model, View, and DB objects.
- * 2. Initialize FireBug Debug Panel and add FireStudio specific panels.
- * 3. Adds configs to Config object.
- * 4. Inializes a database connection based on the PDO config.
- * RUN
- * 1. Adds modules from the Config object. NOTE: when a module is added,
- *    its module::config() method will be invoked.
- * 2. Registers routes from the Config object.
- * 3. Resolves the route and adds the module registered with the route.
- *    NOTE: when a module is added, its module::config() method will be invoked.
- * 4. Load all modules by invoking the module::load() method.
- * 5. Invokes module::run() based on the module registered with the resolved route
- *    then invokes the controller and action based on the resolved route.
- */
 class Studio
 {
 
@@ -62,6 +43,7 @@ class Studio
 
     public function __construct($appJsonConfig)
     {
+        session_start();
         $this->_modules = [];
         $this->_plugins = [];
         $this->_initInjector();
@@ -293,7 +275,8 @@ class Studio
     private function _runResolvedControllerAction()
     {
         $controllerClass = $this->_router->getController();
-        $action = $this->_router->getAction();
+        $method = strtoupper($this->_router->getRequestMethod());
+        $action = ($method !== 'GET') ? $this->_router->getAction() . $method : $this->_router->getAction();
         if ($controllerClass && $action) {
             $controller = new $controllerClass();
             $controller->run();

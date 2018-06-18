@@ -15,6 +15,7 @@ class Router {
     {
         $this->_routes = [];
         $this->_matchedRoute = false;
+        $this->_method = false;
         $this->_module = false;
         $this->_controller = false;
         $this->_action = false;
@@ -58,6 +59,11 @@ class Router {
     public function getRoute()
     {
         return $this->_matchedRoute;
+    }
+
+    public function getRequestMethod()
+    {
+        return $this->_method;
     }
 
     public function getModule()
@@ -106,6 +112,7 @@ class Router {
     {
         $routeConfig = $this->_routes;
         $currentRoute = $_SERVER['REQUEST_URI'];
+        $this->_method = $_SERVER['REQUEST_METHOD'];
         if (array_key_exists($currentRoute, $routeConfig)) {
             $this->_matchedRoute = $currentRoute;
             $this->_module = $routeConfig[$currentRoute]->module;

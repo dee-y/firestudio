@@ -10,8 +10,8 @@ use \Fire\Studio;
 class AdminModule extends Module {
 
     const TEMPLATE_ADMIN_LAYOUT = 'fire.studio.admin.layout';
-    const ADMIN_STANDARD_LAYOUT_STYLE = 'admin.standardStyle';
-    const ADMIN_DASHBOARD_URL = 'admin.dashboard';
+    const STYLE_ADMIN_STANDARD_LAYOUT = 'admin.standardStyle';
+    const URL_ADMIN_DASHBOARD = 'application.admin.dashboard';
 
     public function config()
     {
@@ -46,7 +46,7 @@ class AdminModule extends Module {
     private function _addInlineStyles()
     {
         $this->addInlineStyle(
-            self::ADMIN_STANDARD_LAYOUT_STYLE,
+            self::STYLE_ADMIN_STANDARD_LAYOUT,
             __DIR__ . '/AdminModule/Public/css/standardLayout.css'
         );
     }
@@ -59,11 +59,11 @@ class AdminModule extends Module {
     private function _initViewModel()
     {
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
-        $this->model->adminHomeUrl = $router->getUrl(self::ADMIN_DASHBOARD_URL);
+        $this->model->adminHomeUrl = $router->getUrl(self::URL_ADMIN_DASHBOARD);
 
         if (!isset($this->model->adminMenu)) {
             $this->model->adminMenu = [];
         }
-        $this->model->adminMenu[] =  new MenuItem('Dashboard', self::ADMIN_DASHBOARD_URL);
+        $this->model->adminMenu[] =  new MenuItem('Dashboard', self::URL_ADMIN_DASHBOARD);
     }
 }

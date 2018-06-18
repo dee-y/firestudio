@@ -38,4 +38,31 @@ abstract class BaseComponent
         $view = $this->injector()->get(Studio::INJECTOR_VIEW);
         $view->addInlineScript($id, $pathToInlineScript);
     }
+
+    public function getGet()
+    {
+        return (isset($_GET)) ? (object) $_GET : false;
+    }
+
+    public function getPost()
+    {
+        return (isset($_POST)) ? (object) $_POST : false;
+    }
+
+    public function getPut()
+    {
+        return (isset($_PUT)) ? (object) $_PUT : false;
+    }
+
+    public function getDelete()
+    {
+        return (isset($_DELETE)) ? (object) $_DELETE : false;
+    }
+
+    public function redirect($urlId, $params = [])
+    {
+        $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
+        $url = $router->getUrl($urlId, $params);
+        header('Location: ' . $url);
+    }
 }

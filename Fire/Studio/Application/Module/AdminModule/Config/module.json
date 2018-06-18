@@ -1,6 +1,6 @@
 {
     "routes": {
-        "admin.dashboard": {
+        "application.admin.dashboard": {
             "path": "/admin",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\AdminController",

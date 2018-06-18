@@ -12,6 +12,7 @@
     "require": {
         "ua1-labs/firebug": "1.*",
         "ua1-labs/firesql": "1.*",
+        "vlucas/valitron": "1.*",
         "mustache/mustache": "2.*"
     },
     "require-dev": {
