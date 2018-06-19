@@ -10,6 +10,7 @@ use \Fire\Bug\Panel\Plugins as FireBugPanelPlugins;
 use \Fire\Bug\Panel\Modules as FireBugPanelModules;
 use \Fire\Bug\Panel\Render as FireBugPanelRender;
 use \Fire\Bug\Panel\Router as FireBugPanelRouter;
+use \Fire\Bug\Panel\Session as FireBugPanelSession;
 use \Fire\Bug\Panel\View as FireBugPanelView;
 use \Fire\Studio\Module;
 use \Fire\Studio\Plugin;
@@ -151,9 +152,10 @@ class Studio
          //add all debug panels
          $this->_debug->addPanel(new FireBugPanelInjector());
          $this->_debug->addPanel(new FireBugPanelConfig());
-         $this->_debug->addPanel(new FireBugPanelRouter());
          $this->_debug->addPanel(new FireBugPanelPlugins());
          $this->_debug->addPanel(new FireBugPanelModules());
+         $this->_debug->addPanel(new FireBugPanelRouter());
+         $this->_debug->addPanel(new FireBugPanelSession());
          $this->_debug->addPanel(new FireBugPanelView());
          $this->_debug->addPanel(new FireBugPanelRender());
     }
