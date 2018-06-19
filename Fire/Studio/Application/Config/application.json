@@ -2,7 +2,7 @@
     "debug": false,
     "pdo": false,
     "plugins": [
-        "Fire\\Studio\\Application\\Plugin\\AuthenticationPlugin"
+        "Fire\\Studio\\Application\\Module\\ApplicationModule\\Plugin\\AuthenticationPlugin"
     ],
     "modules": [
         "Fire\\Studio\\Application\\Module\\ApplicationModule",

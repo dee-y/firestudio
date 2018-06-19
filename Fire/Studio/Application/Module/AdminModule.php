@@ -38,7 +38,7 @@ class AdminModule extends Module {
     private function _loadPartials()
     {
         $this->loadPartial(
-            ApplicationModule::TEMPLATE_APPLICATION_PARTIAL_HTML_HEAD,
+            ApplicationModule::PARTIAL_APPLICATION_PARTIAL_HTML_HEAD,
             __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
         );
     }

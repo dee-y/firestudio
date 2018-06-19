@@ -1,9 +1,9 @@
 <?php
 
-namespace Fire\Studio\Application\Plugin;
+namespace Fire\Studio\Application\Module\ApplicationModule\Plugin;
 
 use \Fire\Studio\Plugin;
-use \Fire\Studio\Application\Plugin\AuthenticationPlugin\Service\UserAuth;
+use \Fire\Studio\Application\Module\ApplicationModule\Service\UserAuth;
 
 class AuthenticationPlugin extends Plugin
 {

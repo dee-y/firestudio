@@ -1,5 +1,9 @@
 <form method="post" action="/login">
-    <input type="text" name="userNameEmail">
-    <input type="password" name="userPassword">
+    <label for="userNameEmail"> Email
+        <input id="userNameEmail" type="text" name="userNameEmail" value={{sessionForm.userNameEmail}}>
+    </label>
+    <label for="userPassword"> Password
+        <input type="password" name="userPassword">
+    </label>
     <input type="submit" value="submit">
 </form>

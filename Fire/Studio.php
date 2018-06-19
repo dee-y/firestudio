@@ -32,6 +32,14 @@ class Studio
     const INJECTOR_VIEW = 'fire.studio.view';
     const INJECTOR_DATABASE = 'fire.studio.db';
 
+    const SESSION_MESSAGE_KEY = 'fsmessage';
+    const SESSION_ERRORS_KEY = 'fserrors';
+    const SESSION_FORM_KEY = 'fsform';
+
+    public static $sessionMessage;
+    public static $sessionErrors;
+    public static $sessionForm;
+
     private $_config;
     private $_debug;
     private $_router;
@@ -44,6 +52,12 @@ class Studio
     public function __construct($appJsonConfig)
     {
         session_start();
+        self::$sessionMessage = isset($_SESSION[self::SESSION_MESSAGE_KEY]) ? $_SESSION[self::SESSION_MESSAGE_KEY] : false;
+        self::$sessionErrors = isset($_SESSION[self::SESSION_ERRORS_KEY]) ? $_SESSION[self::SESSION_ERRORS_KEY] : false;
+        self::$sessionForm = isset($_SESSION[self::SESSION_FORM_KEY]) ? $_SESSION[self::SESSION_FORM_KEY] : false;
+        unset($_SESSION[self::SESSION_MESSAGE_KEY]);
+        unset($_SESSION[self::SESSION_ERRORS_KEY]);
+        unset($_SESSION[self::SESSION_FORM_KEY]);
         $this->_modules = [];
         $this->_plugins = [];
         $this->_initInjector();
@@ -275,8 +289,8 @@ class Studio
     private function _runResolvedControllerAction()
     {
         $controllerClass = $this->_router->getController();
-        $method = strtoupper($this->_router->getRequestMethod());
-        $action = ($method !== 'GET') ? $this->_router->getAction() . $method : $this->_router->getAction();
+        $method = $this->_router->getRequestMethod();
+        $action = $this->_router->getAction();
         if ($controllerClass && $action) {
             $controller = new $controllerClass();
             $controller->run();

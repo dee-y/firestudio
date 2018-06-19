@@ -15,6 +15,39 @@ abstract class BaseComponent
         $this->model = $this->injector()->get(Studio::INJECTOR_MODEL);
     }
 
+    public function setSessionMessage($message)
+    {
+        $_SESSION[Studio::SESSION_MESSAGE_KEY] = $message;
+        Studio::$sessionMessage = $message;
+    }
+
+    public function getSessionMessage()
+    {
+        return Studio::$sessionMessage;
+    }
+
+    public function setSessionErrors($errors)
+    {
+        $_SESSION[Studio::SESSION_ERRORS_KEY] = $errors;
+        Studio::$sessionErrors = $errors;
+    }
+
+    public function getSessionErrors()
+    {
+        return Studio::$sessionErrors;
+    }
+
+    public function setSessionForm($form)
+    {
+        $_SESSION[Studio::SESSION_FORM_KEY] = $form;
+        Studio::$sessionForm = $form;
+    }
+
+    public function getSessionForm()
+    {
+        return Studio::$sessionForm;
+    }
+
     public function loadTemplate($id, $pathToTemplate)
     {
         $view = $this->injector()->get(Studio::INJECTOR_VIEW);
@@ -64,5 +97,6 @@ abstract class BaseComponent
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $url = $router->getUrl($urlId, $params);
         header('Location: ' . $url);
+        exit();
     }
 }

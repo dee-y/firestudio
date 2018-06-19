@@ -138,7 +138,10 @@ class View
         $renderDebugPanel->setTemplateId($templateId);
         $renderDebugPanel->setModel($this->model);
 
-        $this->model->debugPanel = $this->_debug->render(false);
+        $this->model->sessionMessage = Studio::$sessionMessage;
+        $this->model->sessionErrors = Studio::$sessionErrors;
+        $this->model->sessionForm = Studio::$sessionForm;
+        $this->model->debugPanel = $this->_debug->render();
         $mustacheTemplate = $this->getTemplate($templateId);
         return $mustache->render($mustacheTemplate, $this->model);
     }

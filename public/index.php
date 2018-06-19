@@ -10,5 +10,3 @@ use Fire\Studio;
 
 $studio = new Studio(__DIR__ . '/application.json');
 $studio->run();
-
-// echo $studio->injector->get('fire.studio.debug')->render();

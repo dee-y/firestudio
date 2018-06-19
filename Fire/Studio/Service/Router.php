@@ -6,6 +6,8 @@ class Router {
     private $_routes;
     private $_currentRoute;
     private $_matchedRoute;
+    private $_method;
+    private $_isAjaxRequest;
     private $_module;
     private $_controller;
     private $_action;
@@ -15,6 +17,7 @@ class Router {
     {
         $this->_routes = [];
         $this->_matchedRoute = false;
+        $this->_isAjaxRequest = false;
         $this->_method = false;
         $this->_module = false;
         $this->_controller = false;
@@ -59,6 +62,11 @@ class Router {
     public function getRoute()
     {
         return $this->_matchedRoute;
+    }
+
+    public function isAjaxRequest()
+    {
+        return $this->_isAjaxRequest;
     }
 
     public function getRequestMethod()
@@ -112,12 +120,12 @@ class Router {
     {
         $routeConfig = $this->_routes;
         $currentRoute = $_SERVER['REQUEST_URI'];
-        $this->_method = $_SERVER['REQUEST_METHOD'];
+        $this->_method = strtoupper($_SERVER['REQUEST_METHOD']);
         if (array_key_exists($currentRoute, $routeConfig)) {
             $this->_matchedRoute = $currentRoute;
             $this->_module = $routeConfig[$currentRoute]->module;
             $this->_controller = $routeConfig[$currentRoute]->controller;
-            $this->_action = $routeConfig[$currentRoute]->action;
+            $this->_action = $this->_getAdjustedAction($routeConfig[$currentRoute]->action);
             $this->_id = $routeConfig[$currentRoute]->id;
             return true;
         } else {
@@ -149,7 +157,7 @@ class Router {
                         $this->_matchedRoute = $path;
                         $this->_module = $route->module;
                         $this->_controller = $route->controller;
-                        $this->_action = $route->action;
+                        $this->_action = $this->_getAdjustedAction($route->action);
                         $this->_id = $route->id;
                         $matchedRoute = explode('/', substr($this->_matchedRoute, 1));
                         $i = 0;
@@ -167,12 +175,19 @@ class Router {
                 $this->_matchedRoute = '*';
                 $this->_module = $routeConfig['*']->module;
                 $this->_controller = $routeConfig['*']->controller;
-                $this->_action = $routeConfig['*']->action;
+                $this->_action = $this->_getAdjustedAction($routeConfig['*']->action);
                 $this->_id = $routeConfig['*']->id;
                 return true;
             } else {
                 return false;
             }
         }
+    }
+
+    private function _getAdjustedAction($action)
+    {
+        $method = ($this->getRequestMethod() !== 'GET') ? $this->getRequestMethod() : '';
+        $ajax = ($this->isAjaxRequest()) ? 'AJAX' : '';
+        return $action . $method . $ajax;
     }
 }

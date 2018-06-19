@@ -4,20 +4,19 @@ namespace Fire\Studio;
 
 use \Fire\Studio\BaseComponent;
 use \Fire\Studio;
-use \Valitron\Validator;
+use \Fire\Studio\Form;
 
 abstract class Controller extends BaseComponent {
 
     const FIRESTUDIO_PAGE_CONTENT = 'fire.studio.page.content';
     const FIRESTUDIO_PAGE_SIDEBAR = 'fire.studio.page.sidebar';
-    const FIELD_VALIDATION_REQUIRED = 'required';
 
-    private $_layoutTemplate;
+    private $_layoutTemplateId;
 
     public function __construct()
     {
         parent::__construct();
-        $this->_layoutTemplate = '';
+        $this->_layoutTemplateId = '';
     }
 
     public function run() {}
@@ -26,51 +25,19 @@ abstract class Controller extends BaseComponent {
 
     public function getFormPost()
     {
-        return new Validator((array) $this->getPost());
+        $postData = $this->getPost();
+        $this->setSessionForm($postData);
+        return ($postData) ? new Form($postData) : false;
     }
 
     public function getFormGet()
     {
-        return new Validator((array) $this->getGet());
-    }
-
-    public function setSessionErrors($errors)
-    {
-        $_SESSION['fserrors'] = $errors;
-    }
-
-    public function getSessionErrors()
-    {
-        $errors = $_SESSION['fserrors'];
-        $this->clearSessionErrors();
-        return isset($errors) ? $errors : false;
-    }
-
-    public function clearSessionErrors()
-    {
-        unset($_SESSION['fserrors']);
-    }
-
-    public function setSessionMessage($message)
-    {
-        $_SESSION['fsmessage'] = $message;
-    }
-
-    public function getSessionMessage()
-    {
-        $message = $_SESSION['fsmessage'];
-        $this->clearSessionMessage();
-        return isset($message) ? $message : false;
-    }
-
-    public function clearSessionMessage()
-    {
-        unset($_SESSION['fsmessage']);
+        return new Form($this->getGet());
     }
 
     public function setLayout($templateId)
     {
-        $this->_layoutTemplate = $templateId;
+        $this->_layoutTemplateId = $templateId;
     }
 
     public function setPageTemplate($pathToTemplate)
@@ -86,7 +53,7 @@ abstract class Controller extends BaseComponent {
     public function renderHtml()
     {
         $view = $this->injector()->get(Studio::INJECTOR_VIEW);
-        return $view->render($this->_layoutTemplate, $this->model);
+        return $view->render($this->_layoutTemplateId, $this->model);
     }
 
     public function renderDebugPanel()

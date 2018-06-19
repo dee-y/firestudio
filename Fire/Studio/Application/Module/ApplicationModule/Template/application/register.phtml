@@ -1,9 +1,9 @@
 <form method="post" action="/register">
     <label for="userFullName"> Full Name
-        <input id="userFullName" type="text" name="userFullName">
+        <input id="userFullName" type="text" name="userFullName" value="{{sessionForm.userFullName}}">
     </label>
     <label for="userEmail"> Email Address
-        <input id="userEmail" type="text" name="userEmail">
+        <input id="userEmail" type="text" name="userEmail" value="{{sessionForm.userEmail}}">
     </label>
     <label for="userPassword"> Password
         <input id="userPassword" type="password" name="userPassword">
