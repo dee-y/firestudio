@@ -23,31 +23,41 @@ class UserAuth
 
     public function isLoggedIn()
     {
-        return ($this->user->__id) ? true : false;
+        return ($this->user->id) ? true : false;
     }
 
     public function getId()
     {
-        return isset($this->__id) ? $this->__id : false;
+        return isset($this->user->id) ? $this->user->id : false;
     }
 
     public function getName()
     {
-        return isset($this->name) ? $this->name : '';
+        return isset($this->user->name) ? $this->user->name : '';
     }
 
     public function getEmail()
     {
-        return isset($this->email) ? $this->email : '';
+        return isset($this->user->email) ? $this->user->email : '';
     }
 
     public function getRoles()
     {
-        return isset($this->roles) ? $this->roles : [];
+        return isset($this->user->roles) ? $this->user->roles : [];
     }
 
     public function hasRole($roleId)
     {
-        return (isset($this->roles)) ? in_array($roleId, $this->roles) : false;
+        return (isset($this->user->roles)) ? in_array($roleId, $this->user->roles) : false;
+    }
+
+    public function hasRoles($roles)
+    {
+        foreach ($roles as $role) {
+            if ($this->hasRole($role)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,7 +1,5 @@
 <?php
     $session = $this->getSessionData();
 ?>
-<span class="fs-label">
-    <span class="fs-pre-wrap">wrap</span>
-    <pre class="debugger fs-dark"><?php echo htmlspecialchars(json_encode($session, JSON_PRETTY_PRINT)); ?></pre>
-</span>
+
+<?php echo $this->renderJson($session); ?>

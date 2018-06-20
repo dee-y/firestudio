@@ -5,24 +5,6 @@
             "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
             "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\ApplicationController",
             "action": "notFound"
-        },
-        "application.register": {
-            "path": "/register",
-            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
-            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
-            "action": "register"
-        },
-        "application.login": {
-            "path": "/login",
-            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
-            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
-            "action": "login"
-        },
-        "application.logout": {
-            "path": "/logout",
-            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
-            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
-            "action": "logout"
         }
     }
 }

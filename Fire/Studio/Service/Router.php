@@ -74,14 +74,29 @@ class Router {
         return $this->_method;
     }
 
+    public function setModule($module)
+    {
+        $this->_module = $module;
+    }
+
     public function getModule()
     {
         return $this->_module;
     }
 
+    public function setController($controller)
+    {
+        $this->_controller = $controller;
+    }
+
     public function getController()
     {
         return $this->_controller;
+    }
+
+    public function setAction($action)
+    {
+        $this->_action = $action;
     }
 
     public function getAction()

@@ -92,10 +92,21 @@ abstract class BaseComponent
         return (isset($_DELETE)) ? (object) $_DELETE : false;
     }
 
-    public function redirect($urlId, $params = [])
+    public function setResponceCode(int $code)
+    {
+        http_response_code($code);
+    }
+
+    public function getResponseCode()
+    {
+        return http_response_code();
+    }
+
+    public function redirect($urlId, $params = [], $responseCode = 302)
     {
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $url = $router->getUrl($urlId, $params);
+        $this->setResponceCode($responseCode);
         header('Location: ' . $url);
         exit();
     }

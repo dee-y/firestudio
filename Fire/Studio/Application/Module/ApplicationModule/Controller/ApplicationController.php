@@ -16,7 +16,15 @@ class ApplicationController extends Controller {
 
     public function notFound()
     {
+        $this->setResponceCode(404);
         $this->setPageTemplate(__DIR__ . '/../Template/error/not-found.phtml');
+        echo $this->renderHtml();
+    }
+
+    public function notAuthorized()
+    {
+        $this->setResponceCode(401);
+        $this->setPageTemplate(__DIR__ . '/../Template/error/not-authorized.phtml');
         echo $this->renderHtml();
     }
 

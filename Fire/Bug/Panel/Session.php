@@ -31,6 +31,6 @@ class Session extends Panel
 
     public function getSessionData()
     {
-        return $_SESSION;
+        return (object) $_SESSION;
     }
 }

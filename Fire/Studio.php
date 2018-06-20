@@ -53,6 +53,7 @@ class Studio
     public function __construct($appJsonConfig)
     {
         session_start();
+        http_response_code(200);
         self::$sessionMessage = isset($_SESSION[self::SESSION_MESSAGE_KEY]) ? $_SESSION[self::SESSION_MESSAGE_KEY] : false;
         self::$sessionErrors = isset($_SESSION[self::SESSION_ERRORS_KEY]) ? $_SESSION[self::SESSION_ERRORS_KEY] : false;
         self::$sessionForm = isset($_SESSION[self::SESSION_FORM_KEY]) ? $_SESSION[self::SESSION_FORM_KEY] : false;

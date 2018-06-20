@@ -3,6 +3,7 @@
 namespace Fire\Bug\Panel;
 
 use \Fire\Bug\Panel;
+use \Fire\Studio;
 
 /**
  * This class represents the panel for config to be displayed
@@ -40,6 +41,12 @@ class Render extends Panel
     public function getTemplateId()
     {
         return $this->_templateId;
+    }
+
+    public function getTemplate()
+    {
+        $view = $this->injector()->get(Studio::INJECTOR_VIEW);
+        return $view->getTemplate($this->_templateId);
     }
 
     public function setModel($model)

@@ -63,7 +63,8 @@ class User {
         return (object) [
             'id' => $this->__id,
             'name' => $this->name,
-            'email' => $this->email
+            'email' => $this->email,
+            'roles' => $this->roles
         ];
     }
 

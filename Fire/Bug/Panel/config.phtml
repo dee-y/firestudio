@@ -1,26 +1,19 @@
 <?php
-    $loadedConfigs = $this->getLoadedConfigFiles();
-?>
-<span class="fs-label" style="text-decoration: underline; margin-bottom: 25px;"><strong>LOADED CONFIGS</strong></span>
-<?php if ($loadedConfigs) { ?>
-    <hr class="fs-hr-dotted">
-    <?php foreach ($loadedConfigs as $i => $config) { ?>
-        <span class="fs-label"><strong>Loaded: </strong><?php echo $config->config; ?></span>
-        <span class="fs-label">
-            <?php echo $this->renderTrace($config->trace); ?>
-        </span>
-        <span class="fs-label">
-            <span class="fs-pre-wrap">wrap</span>
-            <pre class="debugger fs-dark"><?php echo htmlspecialchars(json_encode(json_decode($config->fileContent), JSON_PRETTY_PRINT)); ?></pre>
-        </span>
-        <hr class="fs-hr-dotted">
-    <?php } ?>
-<?php } else { ?>
-    <span class="fs-label">No Configs Loaded...</span>
-<?php } ?>
+$loadedConfigs = $this->getLoadedConfigFiles();
 
-<span class="fs-label" style="text-decoration: underline; margin-top: 25px;"><strong>APPLICATION CONFIGURATION</strong></span>
-<span class="fs-label">
-    <span class="fs-pre-wrap">wrap</span>
-    <pre class="debugger fs-dark"><?php echo htmlspecialchars(json_encode($this->getConfig(), JSON_PRETTY_PRINT)); ?></pre>
-</span>
+echo $this->renderLabel('<strong>LOADED CONFIGS</strong>', '', 'text-decoration: underline; margin-bottom: 25px;');
+if ($loadedConfigs) {
+    echo $this->renderSeparator(false);
+    foreach ($loadedConfigs as $i => $config) {
+        echo $this->renderLabel('<strong>Loaded: </strong>' . $config->config);
+        echo $this->renderTrace($config->trace);
+        echo $this->renderJson($config->fileContent);
+        echo $this->renderSeparator(false);
+    }
+} else {
+    echo $this->renderLabel('No Configs Loaded...');
+}
+
+echo $this->renderLabel('<strong>APPLICATION CONFIGURATION</strong>', '', 'text-decoration: underline; margin-top: 25px;');
+echo $this->renderJson($this->getConfig());
+?>

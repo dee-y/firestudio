@@ -96,9 +96,4 @@ class AuthController extends Controller
         $this->redirect(ApplicationModule::URL_LOGIN);
     }
 
-    public function unauthorized()
-    {
-
-    }
-
 }

@@ -1,10 +1,49 @@
 {
+    "plugins": [
+        "Fire\\Studio\\Application\\Module\\ApplicationModule\\Plugin\\AuthenticationPlugin"
+    ],
     "routes": {
+        "application.register": {
+            "path": "/register",
+            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
+            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
+            "action": "register"
+        },
+        "application.login": {
+            "path": "/login",
+            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
+            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
+            "action": "login"
+        },
+        "application.logout": {
+            "path": "/logout",
+            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
+            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
+            "action": "logout"
+        },
         "application.admin.dashboard": {
             "path": "/admin",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\AdminController",
-            "action": "dashboard"
+            "action": "dashboard",
+            "access": [
+                "admin"
+            ]
         }
-    }
+    },
+    "roles": [
+        "admin",
+        "developer",
+        "user"
+    ],
+    "errors": {
+        "application.notAuthorized": {
+            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
+            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\ApplicationController",
+            "action": "notAuthorized"
+        }
+    },
+    "logo": "Fire<strong>STUDIO</strong>",
+    "footerText": "<span>Powered By FireStudio. A Project By <a href=\"https:\/\/ua1.us\">UA1 Labs</a></span>"
+
 }

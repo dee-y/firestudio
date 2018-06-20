@@ -1,14 +1,11 @@
 {
     "debug": false,
     "pdo": false,
-    "plugins": [
-        "Fire\\Studio\\Application\\Module\\ApplicationModule\\Plugin\\AuthenticationPlugin"
-    ],
+    "plugins": [],
     "modules": [
-        "Fire\\Studio\\Application\\Module\\ApplicationModule",
-        "Fire\\Studio\\Application\\Module\\AdminModule"
+        "Fire\\Studio\\Application\\Module\\ApplicationModule"
     ],
     "routes": {},
-    "logo": "Fire<strong>STUDIO</strong>",
-    "footerText": "<span>Powered By FireStudio. A Project By <a href=\"https:\/\/ua1.us\">UA1 Labs</a></span>"
+    "roles": [],
+    "errors": {}
 }
