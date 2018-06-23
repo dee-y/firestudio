@@ -1,6 +1,6 @@
 <?php
 
-namespace Fire\Studio\Application\Module\ApplicationModule\Model;
+namespace Fire\Studio\Application\Model;
 
 use Fire\Studio\DataMapper;
 
@@ -8,6 +8,7 @@ class User {
 
     const COLLECTION_FSUSERS = 'FSUsersCollection';
 
+    public $__id;
     public $name;
     public $email;
     public $password;
@@ -15,6 +16,7 @@ class User {
 
     public function __construct($data = null)
     {
+        $this->__id = false;
         $this->name = false;
         $this->email = false;
         $this->password = false;
@@ -58,10 +60,10 @@ class User {
         return password_verify($password, $this->password);
     }
 
-    public function getData()
+    public function getDataForSession()
     {
         return (object) [
-            'id' => $this->__id,
+            '__id' => $this->__id,
             'name' => $this->name,
             'email' => $this->email,
             'roles' => $this->roles

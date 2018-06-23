@@ -20,6 +20,10 @@ class Config extends Panel
     const NAME = 'Config';
     const TEMPLATE = '/config.phtml';
 
+    /**
+     * Firestudio config service
+     * @var \Fire\Studio\Service\Config
+     */
     private $_config;
 
     /**

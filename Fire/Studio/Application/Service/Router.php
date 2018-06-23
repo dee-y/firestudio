@@ -1,5 +1,5 @@
 <?php
-namespace Fire\Studio\Service;
+namespace Fire\Studio\Application\Service;
 
 class Router {
 
@@ -133,9 +133,15 @@ class Router {
 
     private function _resolve()
     {
-        $routeConfig = $this->_routes;
-        $currentRoute = $_SERVER['REQUEST_URI'];
         $this->_method = strtoupper($_SERVER['REQUEST_METHOD']);
+        $routeConfig = $this->_routes;
+        $requestUri = $_SERVER['REQUEST_URI'];
+        //remove ? from the route matching equation
+        $route = (strpos($requestUri, '?') !== false) 
+            ? substr($requestUri, 0, strpos($requestUri, '?')) : $requestUri;
+        //remove trailing / from the route matching equation
+        $currentRoute = substr($route, -1) === '/' 
+            ? substr($route, 0, -1) : $route;
         if (array_key_exists($currentRoute, $routeConfig)) {
             $this->_matchedRoute = $currentRoute;
             $this->_module = $routeConfig[$currentRoute]->module;
@@ -145,9 +151,9 @@ class Router {
             return true;
         } else {
             //remove url query params and parse route into its parts
-            $routeQuery = explode('?', $currentRoute);
-            $routeParts = explode('/', substr($routeQuery[0], 1));
+            $routeParts = explode('/', substr($currentRoute, 1));
             foreach ($routeConfig as $path => $route) {
+                $routeMatch = false;
                 if (strpos($path, ':') !== false) {
                     $routeMatch = true;
                     $pathParts = explode('/', substr($path, 1));
@@ -168,22 +174,22 @@ class Router {
                     if (isset($routeParts[$i])) {
                         $routeMatch = false;
                     }
-                    if ($routeMatch) {
-                        $this->_matchedRoute = $path;
-                        $this->_module = $route->module;
-                        $this->_controller = $route->controller;
-                        $this->_action = $this->_getAdjustedAction($route->action);
-                        $this->_id = $route->id;
-                        $matchedRoute = explode('/', substr($this->_matchedRoute, 1));
-                        $i = 0;
-                        foreach ($matchedRoute as $matchedRoutePart) {
-                            if (strpos($matchedRoutePart, ':') !== false) {
-                                $this->_routeVars[substr($matchedRoutePart, 1)] = $routeParts[$i];
-                            }
-                            $i++;
+                }
+                if ($routeMatch) {
+                    $this->_matchedRoute = $path;
+                    $this->_module = $route->module;
+                    $this->_controller = $route->controller;
+                    $this->_action = $this->_getAdjustedAction($route->action);
+                    $this->_id = $route->id;
+                    $matchedRoute = explode('/', substr($this->_matchedRoute, 1));
+                    $i = 0;
+                    foreach ($matchedRoute as $matchedRoutePart) {
+                        if (strpos($matchedRoutePart, ':') !== false) {
+                            $this->_routeVars[substr($matchedRoutePart, 1)] = $routeParts[$i];
                         }
-                        return true;
+                        $i++;
                     }
+                    return true;
                 }
             }
             if (array_key_exists('*', $routeConfig)) {

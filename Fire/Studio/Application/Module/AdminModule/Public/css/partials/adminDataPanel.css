@@ -1,0 +1,83 @@
+.admin-data-panel table.data-table {
+    background-color: #fff;
+    box-shadow: 0 1px 12px -3px #6c757d7d;
+}
+
+.admin-data-panel .title .new-btn {
+    background-color: #3c8dbc;
+    color: #fff;
+    border: 1px solid #377fa9;
+    font-size: 14px;
+    padding: 8px 10px 5px 10px;
+    font-weight: bold;
+    margin-left: 3px;
+}
+
+.admin-data-panel .search-form {
+    margin-bottom: 5px;
+}
+
+.admin-data-panel .search-form .fs-btn {
+    border: none;
+}
+
+.admin-data-panel table.data-table thead th {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.admin-data-panel table.data-table tr .action-links {
+    color: #dee2e6;
+    display: block;
+    visibility: hidden;
+}
+
+.admin-data-panel table.data-table tr .action-links a {
+    color: #3c8dbc;
+    font-size: 13px;
+}
+
+.admin-data-panel table.data-table tr:hover .action-links {
+    visibility: visible;
+}
+
+.admin-data-panel .filters {
+    margin-bottom: 5px;
+}
+
+.admin-data-panel .page-nav .pagination {
+    margin-bottom: 0;
+}
+
+.admin-data-panel .page-nav {
+    float: right;
+}
+
+.admin-data-panel .filters .item-count {
+    display: block;
+    float: right;
+    padding: 21px 8px 0 0;
+    line-height: 1;
+}
+
+.admin-data-panel .page-nav .page-num {
+    width: 50px;
+    text-align: center;
+    padding: 10px 0 8px;
+    line-height: 1;
+    font-size: 15px;
+    margin: 0 0 0 3px;
+}
+
+.admin-data-panel .page-nav .of-num {
+    text-align: center;
+    padding: 9px 9px 5px 9px;
+}
+
+.admin-data-panel .page-nav .page-prev .page-link,
+.admin-data-panel .page-nav .page-next .page-link {
+    background: #fff;
+    color: #212529;
+    border-color: #ced5db;
+    border-radius: 0;
+    padding: 8px 15px;
+}

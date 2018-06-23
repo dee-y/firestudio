@@ -41,6 +41,27 @@ summary
     display: block;
 }
 
+input.form-control {
+    border-radius: 0;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.btn:focus, .btn.focus {
+    box-shadow: none;
+}
+
+.btn.fs-btn {
+    background-color: #3c8dbc;
+    color: #fff;
+    border: 1px solid #377fa9;
+    font-size: 14px;
+    padding: 8px 10px 5px 10px;
+    font-weight: bold;
+}
+
 .admin-wrapper {
     height: 100%;
     position: relative;
@@ -134,7 +155,6 @@ summary
 }
 
 #admin-main section.content {
-    min-height: 250px;
     padding: 15px;
     margin-right: auto;
     margin-left: auto;

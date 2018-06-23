@@ -10,8 +10,14 @@ use \Fire\Studio;
 class AdminModule extends Module {
 
     const TEMPLATE_ADMIN_LAYOUT = 'fire.studio.admin.layout';
+    const PARTIAL_ADMIN_DATA_PANEL = 'fire.studio.admin.partial.adminDataPanel';
     const STYLE_ADMIN_STANDARD_LAYOUT = 'admin.standardStyle';
+    const STYLE_ADMIN_DATA_PANEL = 'admin.partial.adminDataPanel';
     const URL_ADMIN_DASHBOARD = 'application.admin.dashboard';
+    const URL_ADMIN_USERS = 'application.admin.users';
+    const ROLE_USER = 'user';
+    const ROLE_ADMIN = 'admin';
+    const ROLE_DEVELOPER = 'developer';
 
     public function config()
     {
@@ -20,44 +26,44 @@ class AdminModule extends Module {
 
     public function run()
     {
-        $this->_loadTemplates();
-        $this->_loadPartials();
-        $this->_addInlineStyles();
-        $this->_addInlineScripts();
-        $this->_initViewModel();
-    }
-
-    private function _loadTemplates()
-    {
+        //load templates
         $this->loadTemplate(
             self::TEMPLATE_ADMIN_LAYOUT,
             __DIR__ . '/AdminModule/Template/layouts/standard-layout.phtml'
         );
-    }
 
-    private function _loadPartials()
-    {
+        //load partials
         $this->loadPartial(
             ApplicationModule::PARTIAL_APPLICATION_PARTIAL_HTML_HEAD,
             __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
         );
-    }
+        $this->loadPartial(
+            ApplicationModule::PARTIAL_APPLICATION_PARTIAL_SESSION_ERRORS,
+            __DIR__ . '/ApplicationModule/Template/partials/sessionErrors.phtml'
+        );
+        $this->loadPartial(
+            ApplicationModule::PARTIAL_APPLICATION_PARTIAL_SESSION_MESSAGE,
+            __DIR__ . '/ApplicationModule/Template/partials/sessionMessage.phtml'
+        );
+        $this->loadPartial(
+            self::PARTIAL_ADMIN_DATA_PANEL,
+            __DIR__ . '/AdminModule/Template/partials/adminDataPanel.phtml'
+        );
 
-    private function _addInlineStyles()
-    {
+        //load inline styles
+        $this->addInlineStyle(
+            ApplicationModule::STYLE_APPLICATION_BOOTSTRAP,
+            __DIR__ . '/../../../../node_modules/bootstrap/dist/css/bootstrap.css'
+        );
         $this->addInlineStyle(
             self::STYLE_ADMIN_STANDARD_LAYOUT,
             __DIR__ . '/AdminModule/Public/css/standardLayout.css'
         );
-    }
+        $this->addInlineStyle(
+            self::STYLE_ADMIN_DATA_PANEL,
+            __DIR__ . '/AdminModule/Public/css/partials/adminDataPanel.css'
+        );
 
-    private function _addInlineScripts()
-    {
-
-    }
-
-    private function _initViewModel()
-    {
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $this->model->adminHomeUrl = $router->getUrl(self::URL_ADMIN_DASHBOARD);
 
@@ -65,5 +71,6 @@ class AdminModule extends Module {
             $this->model->adminMenu = [];
         }
         $this->model->adminMenu[] =  new MenuItem('Dashboard', self::URL_ADMIN_DASHBOARD);
+        $this->model->adminMenu[] =  new MenuItem('Users', self::URL_ADMIN_USERS);
     }
 }

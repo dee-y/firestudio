@@ -14,10 +14,10 @@ use \Fire\Bug\Panel\Session as FireBugPanelSession;
 use \Fire\Bug\Panel\View as FireBugPanelView;
 use \Fire\Studio\Module;
 use \Fire\Studio\Plugin;
-use \Fire\Studio\Service\Config;
-use \Fire\Studio\Service\Model as ViewModel;
-use \Fire\Studio\Service\Router;
-use \Fire\Studio\Service\View;
+use \Fire\Studio\Application\Service\Config;
+use \Fire\Studio\Application\Service\Model as ViewModel;
+use \Fire\Studio\Application\Service\Router;
+use \Fire\Studio\Application\Service\View;
 use \Fire\StudioException;
 use \Fire\Sql;
 

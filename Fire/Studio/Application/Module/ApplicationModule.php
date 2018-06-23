@@ -10,6 +10,7 @@ class ApplicationModule extends Module {
     const PARTIAL_APPLICATION_PARTIAL_HTML_HEAD = 'fire.studio.partial.html.head';
     const PARTIAL_APPLICATION_PARTIAL_SESSION_ERRORS = 'fire.studio.partial.session.errors';
     const PARTIAL_APPLICATION_PARTIAL_SESSION_MESSAGE = 'fire.studio.partial.session.message';
+    const STYLE_APPLICATION_BOOTSTRAP = 'application.bootstrap';
     const URL_LOGIN = 'application.login';
     const URL_REGISTER = 'application.register';
 
@@ -20,12 +21,13 @@ class ApplicationModule extends Module {
 
     public function run()
     {
-        $this->_loadPartials();
-        $this->_loadTemplates();
-    }
+        //load templates
+        $this->loadTemplate(
+            self::TEMPLATE_APPLICATION_LAYOUT,
+            __DIR__ . '/ApplicationModule/Template/layouts/standard-layout.phtml'
+        );
 
-    private function _loadPartials()
-    {
+        //load partials
         $this->loadPartial(
             self::PARTIAL_APPLICATION_PARTIAL_HTML_HEAD,
             __DIR__ . '/ApplicationModule/Template/partials/htmlHead.phtml'
@@ -39,13 +41,4 @@ class ApplicationModule extends Module {
             __DIR__ . '/ApplicationModule/Template/partials/sessionMessage.phtml'
         );
     }
-
-    private function _loadTemplates()
-    {
-        $this->loadTemplate(
-            self::TEMPLATE_APPLICATION_LAYOUT,
-            __DIR__ . '/ApplicationModule/Template/layouts/standard-layout.phtml'
-        );
-    }
-
 }

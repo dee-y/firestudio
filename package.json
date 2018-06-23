@@ -1,0 +1,6 @@
+{
+  "name": "firestudio",
+  "dependencies": {
+    "bootstrap": "4.*"
+  }
+}

@@ -1,0 +1,67 @@
+{{#adminDataPanel}}
+<div class="admin-data-panel">
+    <h1 class="title">Manage {{pluralName}}
+        <span class="btn new-btn">New {{singularName}}</span>
+    </h1>
+    
+    <form class="row search-form">
+        <div class="col-12 col-md-8"></div>
+        <div class="input-group col-12 col-md-4">
+            <input type="text" class="form-control" name="s">
+            <div class="input-group-append">
+                <input class="btn fs-btn" type="submit" value="Search">
+            </div>
+        </div>
+    </form>
+    <div class="row filters">
+        <div class="col-12 col-md-10 col-lg-8 filter-options"></div>
+        <div class="col-12 col-md-2 col-lg-4">
+            <nav class="page-nav">
+                <ul class="pagination">
+                    <li class="page-item page-prev">
+                        <a class="page-link" href="?={{previousPage}}"><</a>
+                    </li>
+                    <li class="page-item">
+                        <form method="get">
+                            <input type="text" class="form-control page-num" value="{{currentPage}}" name="page">
+                        </form>
+                    </li>
+                    <li class="page-item of-num">of {{pageCount}}</li>
+                    <li class="page-item page-next">
+                        <a class="page-link" href="?={{nextPage}}">></a>
+                        <!-- <div class="page-link">></div> -->
+                    </li>
+                </ul>
+            </nav>
+            <span class="item-count">{{totalCount}} {{singularName}}</span>
+        </div>
+    </div>
+    <table class="table data-table table-striped">
+        <thead>
+            <tr>
+                <th>Email Adress</th>
+                <th>Name</th>
+                <th>Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    josh@ua1.us
+                    <span class="action-links"><a href="#">Edit</a> | <a href="#">Delete</a></span>
+                </td>
+                <td>Joshua Johnson</td>
+                <td>Admin, Developer</td>
+            </tr>
+            <tr>
+                <td>
+                    josh@ua1.us
+                    <span class="action-links"><a href="#">Edit</a> | <a href="#">Delete</a></span>
+                </td>
+                <td>Joshua Johnson</td>
+                <td>Admin, Developer</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{{/adminDataPanel}}

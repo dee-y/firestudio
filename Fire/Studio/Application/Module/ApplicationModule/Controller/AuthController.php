@@ -8,7 +8,7 @@ use \Fire\Studio\Form;
 use \Fire\Studio\Application\Module\ApplicationModule;
 use \Fire\Studio\Application\Module\AdminModule;
 use \Fire\Studio\Application\Module\ApplicationModule\Service\UserAuth;
-use \Fire\Studio\Application\Module\ApplicationModule\Model\User;
+use \Fire\Studio\Application\Model\User;
 use \Fire\Studio;
 
 class AuthController extends Controller
@@ -41,7 +41,7 @@ class AuthController extends Controller
         if ($form->isValid()) {
             $isExistinUser = $this->_usersCollection->find('{"email":"' . strtolower($form->userEmail) . '"}');
             if ($isExistinUser) {
-                $this->setSessionMessage('An account has already been created with that email address!');
+                $this->setSessionMessage('An account has already been created with that email address.');
             } else {
                 $user = new User();
                 $user->setName($form->userFullName);
@@ -75,8 +75,12 @@ class AuthController extends Controller
                 $user = new User($userInfo[0]);
                 $verifiedUser = $user->verifyPassword($form->userPassword);
                 if ($verifiedUser) {
-                    $_SESSION[UserAuth::SESSION_AUTHENTICATION_KEY] = $user->getData();
-                    $this->redirect(AdminModule::URL_ADMIN_DASHBOARD);
+                    $_SESSION[UserAuth::SESSION_AUTHENTICATION_KEY] = $user->getDataForSession();
+                    $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+                    if (isset($config->redirects->afterLogin)) {
+                        $this->redirect($config->redirects->afterLogin);
+                    }
+                    $this->redirectToUrl('/');
                 } else {
                     $this->setSessionMessage('Invalid email address or password.');
                 }

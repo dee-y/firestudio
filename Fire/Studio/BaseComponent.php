@@ -106,8 +106,13 @@ abstract class BaseComponent
     {
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $url = $router->getUrl($urlId, $params);
-        $this->setResponceCode($responseCode);
-        header('Location: ' . $url);
+        header('Location: ' . $url, true, $responseCode);
+        exit();
+    }
+
+    public function redirectToUrl($url, $responseCode = 302)
+    {
+        header('Location: ' . $url, true, $responseCode);
         exit();
     }
 }

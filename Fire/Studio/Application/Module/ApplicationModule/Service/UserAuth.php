@@ -4,7 +4,7 @@ namespace Fire\Studio\Application\Module\ApplicationModule\Service;
 
 use \Fire\Studio;
 use \Fire\Studio\DataMapper;
-use \Fire\Studio\Application\Module\ApplicationModule\Model\User;
+use \Fire\Studio\Application\Model\User;
 
 class UserAuth
 {
@@ -23,7 +23,7 @@ class UserAuth
 
     public function isLoggedIn()
     {
-        return ($this->user->id) ? true : false;
+        return ($this->user->__id) ? true : false;
     }
 
     public function getId()

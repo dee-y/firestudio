@@ -9,6 +9,9 @@
             "email": "development@ua1.us"
         }
     ],
+    "scripts": {
+        "post-install-cmd": "npm install"
+    },
     "require": {
         "ua1-labs/firebug": "1.*",
         "ua1-labs/firesql": "1.*",

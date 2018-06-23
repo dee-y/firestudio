@@ -1,6 +1,6 @@
 {
     "plugins": [
-        "Fire\\Studio\\Application\\Module\\ApplicationModule\\Plugin\\AuthenticationPlugin"
+        "Fire\\Studio\\Application\\Module\\AdminModule\\Plugin\\AuthenticationPlugin"
     ],
     "routes": {
         "application.register": {
@@ -29,6 +29,15 @@
             "access": [
                 "admin"
             ]
+        },
+        "application.admin.users": {
+            "path": "/admin/users",
+            "module": "Fire\\Studio\\Application\\Module\\AdminModule",
+            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\UsersController",
+            "action": "index",
+            "access": [
+                "admin"
+            ]
         }
     },
     "roles": [
@@ -36,12 +45,9 @@
         "developer",
         "user"
     ],
-    "errors": {
-        "application.notAuthorized": {
-            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
-            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\ApplicationController",
-            "action": "notAuthorized"
-        }
+    "redirects": {
+        "afterLogin": "application.admin.dashboard",
+        "whenUnauthorized": "application.login"
     },
     "logo": "Fire<strong>STUDIO</strong>",
     "footerText": "<span>Powered By FireStudio. A Project By <a href=\"https:\/\/ua1.us\">UA1 Labs</a></span>"
