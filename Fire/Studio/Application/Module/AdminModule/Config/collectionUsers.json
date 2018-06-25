@@ -1,0 +1,58 @@
+{
+    "collections": {
+        "users": {
+            "collectionName": "FSUsersCollection",
+            "singularName": "User",
+            "pluralName": "Users",
+            "fields": [
+                {
+                    "property": "__id",
+                    "type": "locked",
+                    "validation": [],
+                    "label": "ID",
+                    "isTableField": true
+                },
+                {
+                    "property": "email",
+                    "type": "text",
+                    "validation": [
+                        "required",
+                        "email"
+                    ],
+                    "label": "Email Address",
+                    "isTableField": true
+                },
+                {
+                    "property": "name",
+                    "type": "text",
+                    "validation": [
+                        "required"
+                    ],
+                    "label": "Full Name",
+                    "isTableField": true
+                },
+                {
+                    "property": "roles",
+                    "type": "multiselect",
+                    "validation": [],
+                    "label": "Roles",
+                    "isTableField": true
+                }
+            ],
+            "actionLinks": [
+                {
+                    "label": "View",
+                    "url": "application.admin.collections.view"
+                },
+                {
+                    "label": "Edit",
+                    "url": "application.admin.collections.edit"
+                },
+                {
+                    "label": "Delete",
+                    "url": "application.admin.collections.delete"
+                }
+            ]
+        }
+    }
+}

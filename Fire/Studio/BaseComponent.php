@@ -72,24 +72,49 @@ abstract class BaseComponent
         $view->addInlineScript($id, $pathToInlineScript);
     }
 
-    public function getGet()
+    public function getVariables($key = null)
     {
-        return (isset($_GET)) ? (object) $_GET : false;
+        /**
+         * @var \Fire\Studio\Application\Service\Router
+         */
+        $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
+        return $router->getVariables($key);
     }
 
-    public function getPost()
+    public function getGet($key = null)
     {
-        return (isset($_POST)) ? (object) $_POST : false;
+        $GET = (!empty($_GET)) ? (object) $_GET : false;
+        return ($GET)
+            ? ($key && isset($GET->{$key}))
+                ? $GET->{$key} : $GET
+            : false;
     }
 
-    public function getPut()
+    public function getPost($key = null)
     {
-        return (isset($_PUT)) ? (object) $_PUT : false;
+        $POST = (!empty($_POST)) ? (object) $_POST : false;
+        return ($POST)
+            ? ($key && isset($POST->{$key}))
+                ? $POST->{$key} : $POST
+            : false;
     }
 
-    public function getDelete()
+    public function getPut($key = null)
     {
-        return (isset($_DELETE)) ? (object) $_DELETE : false;
+        $PUT = (!empty($_PUT)) ? (object) $_PUT : false;
+        return ($PUT)
+            ? ($key && isset($PUT->{$key}))
+                ? $PUT->{$key} : $PUT
+            : false;
+    }
+
+    public function getDelete($key = null)
+    {
+        $DELETE = (!empty($_DELETE)) ? (object) $_DELETE : false;
+        return ($DELETE)
+            ? ($key && isset($DELETE->{$key}))
+                ? $DELETE->{$key} : $DELETE
+            : false;
     }
 
     public function setResponceCode(int $code)

@@ -3,7 +3,7 @@
     <h1 class="title">Manage {{pluralName}}
         <span class="btn new-btn">New {{singularName}}</span>
     </h1>
-    
+    {{#searchAvailable}}
     <form class="row search-form">
         <div class="col-12 col-md-8"></div>
         <div class="input-group col-12 col-md-4">
@@ -13,13 +13,16 @@
             </div>
         </div>
     </form>
+    {{/searchAvailable}}
     <div class="row filters">
         <div class="col-12 col-md-10 col-lg-8 filter-options"></div>
         <div class="col-12 col-md-2 col-lg-4">
+            {{#pageNav}}
             <nav class="page-nav">
                 <ul class="pagination">
                     <li class="page-item page-prev">
-                        <a class="page-link" href="?={{previousPage}}"><</a>
+                        {{#previousPage}}<a class="page-link" href="?page={{previousPage}}">&#139;</a>{{/previousPage}}
+                        {{^previousPage}}<div class="page-link">&#139;</div>{{/previousPage}}
                     </li>
                     <li class="page-item">
                         <form method="get">
@@ -28,40 +31,48 @@
                     </li>
                     <li class="page-item of-num">of {{pageCount}}</li>
                     <li class="page-item page-next">
-                        <a class="page-link" href="?={{nextPage}}">></a>
-                        <!-- <div class="page-link">></div> -->
+                        {{#nextPage}}<a class="page-link" href="?page={{nextPage}}">&#155;</a>{{/nextPage}}
+                        {{^nextPage}}<div class="page-link">&#155;</div>{{/nextPage}}
                     </li>
                 </ul>
             </nav>
+            {{/pageNav}}
+            {{#hasTableData}}
             <span class="item-count">{{totalCount}} {{singularName}}</span>
+            {{/hasTableData}}
         </div>
     </div>
+    {{#hasTableData}}
     <table class="table data-table table-striped">
         <thead>
             <tr>
-                <th>Email Adress</th>
-                <th>Name</th>
-                <th>Roles</th>
+                {{#tableHeadings}}
+                <th>{{.}}</th>
+                {{/tableHeadings}}
             </tr>
         </thead>
         <tbody>
+            {{#table}}
             <tr>
+                {{#.}}
                 <td>
-                    josh@ua1.us
-                    <span class="action-links"><a href="#">Edit</a> | <a href="#">Delete</a></span>
+                    {{value}}
+                    {{#hasActionLinks}}
+                    <span class="action-links">
+                        {{#actionLinks}}
+                        {{#.}}<a href="#">{{label}}</a> |{{/.}}
+                        {{/actionLinks}}
+                    </span>
+                    {{/hasActionLinks}}
                 </td>
-                <td>Joshua Johnson</td>
-                <td>Admin, Developer</td>
+                {{/.}}
             </tr>
-            <tr>
-                <td>
-                    josh@ua1.us
-                    <span class="action-links"><a href="#">Edit</a> | <a href="#">Delete</a></span>
-                </td>
-                <td>Joshua Johnson</td>
-                <td>Admin, Developer</td>
-            </tr>
+            {{/table}}
         </tbody>
     </table>
+    {{/hasTableData}}
+    {{^hasTableData}}
+    <p>No objects found...</p>
+    {{/hasTableData}}
 </div>
 {{/adminDataPanel}}

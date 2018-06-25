@@ -22,6 +22,7 @@ class AdminModule extends Module {
     public function config()
     {
         $this->loadConfig(__DIR__ . '/AdminModule/Config/module.json');
+        $this->loadConfig(__DIR__ . '/AdminModule/Config/collectionUsers.json');
     }
 
     public function run()
@@ -53,7 +54,7 @@ class AdminModule extends Module {
         //load inline styles
         $this->addInlineStyle(
             ApplicationModule::STYLE_APPLICATION_BOOTSTRAP,
-            __DIR__ . '/../../../../node_modules/bootstrap/dist/css/bootstrap.css'
+            __DIR__ . '/ApplicationModule/Public/css/bootstrap.css'
         );
         $this->addInlineStyle(
             self::STYLE_ADMIN_STANDARD_LAYOUT,

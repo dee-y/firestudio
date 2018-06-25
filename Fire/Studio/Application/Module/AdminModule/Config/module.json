@@ -38,8 +38,18 @@
             "access": [
                 "admin"
             ]
+        },
+        "application.admin.dynamicCollections": {
+            "path": "/admin/c/:collectionConfigId",
+            "module": "Fire\\Studio\\Application\\Module\\AdminModule",
+            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
+            "action": "index",
+            "access": [
+                "admin"
+            ]
         }
     },
+    "collections": {},
     "roles": [
         "admin",
         "developer",

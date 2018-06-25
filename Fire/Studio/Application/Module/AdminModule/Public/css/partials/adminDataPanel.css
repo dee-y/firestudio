@@ -3,6 +3,12 @@
     box-shadow: 0 1px 12px -3px #6c757d7d;
 }
 
+.admin-data-panel .title {
+    border-bottom: 1px solid #ced5db;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
 .admin-data-panel .title .new-btn {
     background-color: #3c8dbc;
     color: #fff;
@@ -76,8 +82,22 @@
 .admin-data-panel .page-nav .page-prev .page-link,
 .admin-data-panel .page-nav .page-next .page-link {
     background: #fff;
-    color: #212529;
     border-color: #ced5db;
     border-radius: 0;
-    padding: 8px 15px;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 7px 16px 5px;
+    color: #ced5db;
+    cursor: default;
+}
+
+.admin-data-panel .page-nav .page-prev a.page-link,
+.admin-data-panel .page-nav .page-next a.page-link {
+    cursor: pointer;
+    color: #60646c;
+}
+
+.admin-data-panel .page-nav .page-prev a.page-link:hover,
+.admin-data-panel .page-nav .page-next a.page-link:hover {
+    box-shadow: none;
 }
