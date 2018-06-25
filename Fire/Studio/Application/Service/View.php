@@ -81,6 +81,13 @@ class View
         return (isset($this->_partials[$id]->partial)) ? $this->_partials[$id]->partial : '';
     }
 
+    public function renderPartial($id, $model)
+    {
+        $mustache = new Mustache_Engine();
+        $partial = $this->getPartial($id);
+        return $mustache->render($partial, $model);
+    }
+
     public function getTemplates()
     {
         return $this->_templates;

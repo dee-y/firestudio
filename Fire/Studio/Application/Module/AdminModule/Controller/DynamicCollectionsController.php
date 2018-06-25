@@ -2,30 +2,34 @@
 
 namespace Fire\Studio\Application\Module\AdminModule\Controller;
 
+use \Fire\Studio\Application\Module\AdminModule;
 use \Fire\Studio\Application\Module\AdminModule\Controller\BaseController;
-use \Fire\Studio\Application\Module\AdminModule\Controller\Helper\AdminDataPanel;
+use \Fire\Studio\Application\Module\AdminModule\Controller\Helper\DynamicCollectionsHelper;
 use \Fire\Studio;
 
 class DynamicCollectionsController extends BaseController
 {
-    const ROUTE_VARIABLE_COLLECTION_ID = 'collectionConfigId';
+    const ROUTE_VARIABLE_COLLECTION_ID = 'collectionSlug';
+    const ROUTE_VARIABLE_OBJECT_ID = 'objectId';
+    const STYLE_ADMIN_DYNAMIC_COLLECTIONS = 'admin.partial.adminDynamicCollections';
 
     private $_collectionConfig;
-    private $_adminDataPanelHelper;
+    private $_dynamicCollectionsHelper;
 
     public function run()
     {
         parent::run();
-        $collectionConfigId = $this->getVariables(self::ROUTE_VARIABLE_COLLECTION_ID);
+        $collectionSlug = $this->getParams(self::ROUTE_VARIABLE_COLLECTION_ID);
+        $objId = $this->getParams(self::ROUTE_VARIABLE_OBJECT_ID);
         $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
 
         if (
-            $collectionConfigId
-            && isset($config->collections->{$collectionConfigId})
+            $collectionSlug
+            && isset($config->collections->{$collectionSlug})
         ) {
-            $this->setPageTemplate(__DIR__ . '/../Template/admin/collections.phtml');
-            $collectionConfig = $config->collections->{$collectionConfigId};
-            $this->_setupAdminDataPanelHelper($collectionConfig);
+            $collectionConfig = $config->collections->{$collectionSlug};
+            $this->model->title = 'FireStudio:Admin:' .  $collectionConfig->pluralName;
+            $this->_setupDynamicCollectionsHelper($collectionConfig, $collectionSlug, $objId);
         } else {
             $this->_setupNotFound();
         }
@@ -36,56 +40,100 @@ class DynamicCollectionsController extends BaseController
         if ($this->_isPageFound()) {
             $page = $this->getGet('page');
             $currentPage = ($page) ? $page : 1;
-            $this->model->adminDataPanel = $this->_adminDataPanelHelper->getModel($currentPage, 10);
+            $this->model->dynamicCollection = $this->_dynamicCollectionsHelper
+                ->getDynamicCollectionModel($currentPage, 10);
+
+            $this->addInlineStyle(
+                self::STYLE_ADMIN_DYNAMIC_COLLECTIONS,
+                __DIR__ . '/../../AdminModule/Public/css/admin/dynamic-collections.css'
+            );
+            $this->setPageTemplate(__DIR__ . '/../Template/admin/dynamic-collections.phtml');
         }
         echo $this->renderHtml();
     }
 
-    public function view()
+    public function newObj()
     {
+        if ($this->_isPageFound()) {
+            $this->model->newObjForm = $this->_dynamicCollectionsHelper
+                ->getNewObjFormModel();
 
+            $this->setPageTemplate(__DIR__ . '/../Template/admin/dynamic-collections-new.phtml');
+        }
+        echo $this->renderHtml();
     }
 
-    public function edit()
+    public function newObjPOST()
     {
+        if ($this->_isPageFound()) {
+            $collectionSlug = $this->_dynamicCollectionsHelper->getSlug();
+            $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+            $collectionFieldsConfig = $config->collections->{$collectionSlug}->fields;
+            $fieldsMap = (object) [];
+            foreach ($collectionFieldsConfig as $field) {
+                $fieldsMap->{$field->property} = $field;
+            }
 
-    }
+            $form = $this->getFormPost();
+            $formFieldIds = $form->getFieldIds();
+            foreach($formFieldIds as $fieldId) {
+                $validations = $fieldsMap->{$fieldId}->validation;
+                foreach($validations as $validation) {
+                    $form->fieldValidation($fieldId, $validation->type, $validation->message);
+                }
+            }
 
-    public function delete()
-    {
-
-    }
-
-    private function _setupAdminDataPanelHelper($collectionConfig)
-    {
-        $fieldMapping = [];
-        foreach ($collectionConfig->fields as $field) {
-            if (isset($field->property) && isset($field->label)) {
-                $fieldMapping[$field->property] = $field->label;
+            if ($form->isValid()) {
+                $collection = $this->_dynamicCollectionsHelper->getCollection();
+                $collection->insert($form);
+                $this->setSessionMessage('Your new object was added!');
+                $this->redirectToUrl($this->_dynamicCollectionsHelper->getCollectionUrl());
+            } else {
+                $this->setSessionMessage('There was a problem creating your object!');
             }
         }
+        $this->redirectToUrl($this->_dynamicCollectionsHelper->getNewObjUrl());
+    }
 
-        $actionLinks = [
-            (object) [
-                'label' => 'View',
-                'url' => 'application.admin.users.view'
-            ],
-            (object) [
-                'label' => 'Edit',
-                'url' => 'application.admin.users.edit'
-            ],
-            (object) [
-                'label' => 'Delete',
-                'url' => 'application.admin.users.delete'
-            ]
-        ];
+    public function viewObj()
+    {
+        echo $this->renderHtml();
+    }
 
-        $this->_adminDataPanelHelper = new AdminDataPanel(
+    public function editObj()
+    {
+        echo $this->renderHtml();
+    }
+
+    public function deleteObj()
+    {
+        if ($this->_isPageFound()) {
+            $this->model->deleteObj = $this->_dynamicCollectionsHelper
+                ->getDeleteObjModel();
+            $this->setPageTemplate(__DIR__ . '/../Template/admin/dynamic-collections-delete.phtml');
+        }
+        echo $this->renderHtml();
+    }
+
+    public function deleteObjPOST()
+    {
+        if ($this->_isPageFound()) {
+            $collection = $this->_dynamicCollectionsHelper->getCollection();
+            $form = $this->getFormPost();
+            $collection->delete($form->objectId);
+        }
+        $this->redirectToUrl($this->_dynamicCollectionsHelper->getCollectionUrl());
+    }
+
+    private function _setupDynamicCollectionsHelper($collectionConfig, $urlSlug, $objId)
+    {
+        $this->_dynamicCollectionsHelper = new DynamicCollectionsHelper(
+            $urlSlug,
+            $objId,
             $collectionConfig->collectionName,
             $collectionConfig->singularName,
             $collectionConfig->pluralName,
-            $fieldMapping,
-            $actionLinks
+            $collectionConfig->fields
         );
     }
 }

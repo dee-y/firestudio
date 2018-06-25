@@ -3,6 +3,7 @@
 namespace Fire\Studio;
 
 use \Fire\Studio;
+use \Mustache_Engine;
 
 abstract class BaseComponent
 {
@@ -60,6 +61,12 @@ abstract class BaseComponent
         $view->loadPartial($id, $pathToPartial);
     }
 
+    public function renderPartial($id, $model)
+    {
+        $view = $this->injector()->get(Studio::INJECTOR_VIEW);
+        return $view->renderPartial($id, $model);
+    }
+
     public function addInlineStyle($id, $pathToInlineStyle)
     {
         $view = $this->injector()->get(Studio::INJECTOR_VIEW);
@@ -72,13 +79,13 @@ abstract class BaseComponent
         $view->addInlineScript($id, $pathToInlineScript);
     }
 
-    public function getVariables($key = null)
+    public function getParams($key = null)
     {
         /**
          * @var \Fire\Studio\Application\Service\Router
          */
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
-        return $router->getVariables($key);
+        return $router->getParams($key);
     }
 
     public function getGet($key = null)

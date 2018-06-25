@@ -5,16 +5,19 @@ namespace Fire\Studio\Application\Module;
 use \Fire\Studio\Module;
 use \Fire\Studio\Application\Module\AdminModule\MenuItem;
 use \Fire\Studio\Application\Module\ApplicationModule;
+use \Fire\Studio\Application\Module\AdminModule\Controller\DynamicCollectionsController;
 use \Fire\Studio;
 
 class AdminModule extends Module {
 
     const TEMPLATE_ADMIN_LAYOUT = 'fire.studio.admin.layout';
-    const PARTIAL_ADMIN_DATA_PANEL = 'fire.studio.admin.partial.adminDataPanel';
     const STYLE_ADMIN_STANDARD_LAYOUT = 'admin.standardStyle';
-    const STYLE_ADMIN_DATA_PANEL = 'admin.partial.adminDataPanel';
     const URL_ADMIN_DASHBOARD = 'application.admin.dashboard';
-    const URL_ADMIN_USERS = 'application.admin.users';
+    const URL_DYNAMIC_COLLECTIONS = 'application.admin.dynamicCollections';
+    const URL_DYNAMIC_COLLECTIONS_NEW = 'application.admin.dynamicCollections.new';
+    const URL_DYNAMIC_COLLECTIONS_VIEW = 'application.admin.dynamicCollections.view';
+    const URL_DYNAMIC_COLLECTIONS_EDIT = 'application.admin.dynamicCollections.edit';
+    const URL_DYNAMIC_COLLECTIONS_DELETE = 'application.admin.dynamicCollections.delete';
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_DEVELOPER = 'developer';
@@ -23,6 +26,25 @@ class AdminModule extends Module {
     {
         $this->loadConfig(__DIR__ . '/AdminModule/Config/module.json');
         $this->loadConfig(__DIR__ . '/AdminModule/Config/collectionUsers.json');
+        $this->model->adminMenu = [];
+    }
+
+    public function load()
+    {
+        //configure dashboard link
+        $this->model->adminMenu[] =  new MenuItem('Dashboard', self::URL_ADMIN_DASHBOARD);
+
+        //get dynamic collections links
+        $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+        foreach ($config->collections as $slug => $collection) {
+            $this->model->adminMenu[] = new MenuItem(
+                $collection->pluralName,
+                self::URL_DYNAMIC_COLLECTIONS,
+                [
+                    DynamicCollectionsController::ROUTE_VARIABLE_COLLECTION_ID => $slug
+                ]
+            );
+        }
     }
 
     public function run()
@@ -46,10 +68,6 @@ class AdminModule extends Module {
             ApplicationModule::PARTIAL_APPLICATION_PARTIAL_SESSION_MESSAGE,
             __DIR__ . '/ApplicationModule/Template/partials/sessionMessage.phtml'
         );
-        $this->loadPartial(
-            self::PARTIAL_ADMIN_DATA_PANEL,
-            __DIR__ . '/AdminModule/Template/partials/adminDataPanel.phtml'
-        );
 
         //load inline styles
         $this->addInlineStyle(
@@ -58,20 +76,10 @@ class AdminModule extends Module {
         );
         $this->addInlineStyle(
             self::STYLE_ADMIN_STANDARD_LAYOUT,
-            __DIR__ . '/AdminModule/Public/css/standardLayout.css'
-        );
-        $this->addInlineStyle(
-            self::STYLE_ADMIN_DATA_PANEL,
-            __DIR__ . '/AdminModule/Public/css/partials/adminDataPanel.css'
+            __DIR__ . '/AdminModule/Public/css/standard-layout.css'
         );
 
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $this->model->adminHomeUrl = $router->getUrl(self::URL_ADMIN_DASHBOARD);
-
-        if (!isset($this->model->adminMenu)) {
-            $this->model->adminMenu = [];
-        }
-        $this->model->adminMenu[] =  new MenuItem('Dashboard', self::URL_ADMIN_DASHBOARD);
-        $this->model->adminMenu[] =  new MenuItem('Users', self::URL_ADMIN_USERS);
     }
 }

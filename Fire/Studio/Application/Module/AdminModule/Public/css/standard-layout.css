@@ -223,3 +223,32 @@ input.form-control {
 {
     background-color: #323435;
 }
+
+.admin-section {
+    background-color: #fff;
+    padding: 40px;
+    margin-bottom: 20px;
+    border: 2px solid #464646;
+}
+
+.admin-form .fields {
+    background: #e1ebf5;
+    border: 1px solid #94a7b9;
+    color: #495057;
+    padding: 30px 30px 20px 30px;
+    margin-bottom: 20px;
+}
+
+.admin-form .fields label {
+    font-weight: bold;
+}
+
+.btn.admin-btn {
+    background-color: #3c8dbc;
+    color: #fff;
+    border: 1px solid #377fa9;
+    font-size: 18px;
+    padding: 8px 18px 5px 18px;
+    margin-right: 5px;
+    border-radius: 0;
+}

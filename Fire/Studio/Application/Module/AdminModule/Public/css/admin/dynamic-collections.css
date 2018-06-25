@@ -17,6 +17,7 @@
     padding: 8px 10px 5px 10px;
     font-weight: bold;
     margin-left: 3px;
+    border-radius: 0;
 }
 
 .admin-data-panel .search-form {

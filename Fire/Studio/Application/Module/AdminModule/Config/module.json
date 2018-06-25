@@ -30,20 +30,47 @@
                 "admin"
             ]
         },
-        "application.admin.users": {
-            "path": "/admin/users",
+        "application.admin.dynamicCollections": {
+            "path": "/admin/dc/:collectionSlug",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
-            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\UsersController",
+            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
             "action": "index",
             "access": [
                 "admin"
             ]
         },
-        "application.admin.dynamicCollections": {
-            "path": "/admin/c/:collectionConfigId",
+        "application.admin.dynamicCollections.new": {
+            "path": "/admin/dc/:collectionSlug/new",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
-            "action": "index",
+            "action": "newObj",
+            "access": [
+                "admin"
+            ]
+        },
+        "application.admin.dynamicCollections.view": {
+            "path": "/admin/dc/:collectionSlug/view/:objectId",
+            "module": "Fire\\Studio\\Application\\Module\\AdminModule",
+            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
+            "action": "viewObj",
+            "access": [
+                "admin"
+            ]
+        },
+        "application.admin.dynamicCollections.edit": {
+            "path": "/admin/dc/:collectionSlug/edit/:objectId",
+            "module": "Fire\\Studio\\Application\\Module\\AdminModule",
+            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
+            "action": "editObj",
+            "access": [
+                "admin"
+            ]
+        },
+        "application.admin.dynamicCollections.delete": {
+            "path": "/admin/dc/:collectionSlug/delete/:objectId",
+            "module": "Fire\\Studio\\Application\\Module\\AdminModule",
+            "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
+            "action": "deleteObj",
             "access": [
                 "admin"
             ]

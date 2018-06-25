@@ -19,7 +19,10 @@ class MenuItem
         $this->id = $id;
         $this->title = $title;
         $this->url = $router->getUrl($id, $params);
-        $this->active = $router->getId() === $id;
+        $this->active = (
+            $router->getId() === $id
+            && $router->getParams() === $params
+        );
     }
 
 }

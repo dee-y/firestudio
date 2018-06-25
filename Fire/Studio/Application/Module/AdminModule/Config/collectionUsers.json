@@ -6,51 +6,61 @@
             "pluralName": "Users",
             "fields": [
                 {
-                    "property": "__id",
-                    "type": "locked",
-                    "validation": [],
-                    "label": "ID",
-                    "isTableField": true
-                },
-                {
                     "property": "email",
                     "type": "text",
                     "validation": [
-                        "required",
-                        "email"
+                        {
+                            "type": "required",
+                            "message": "The user's email address is required"
+                        },
+                        {
+                            "type": "email",
+                            "message": "The user's email address must be valid"
+                        }
                     ],
                     "label": "Email Address",
-                    "isTableField": true
+                    "displayOnForm": true,
+                    "displayOnTable": true
                 },
                 {
                     "property": "name",
                     "type": "text",
                     "validation": [
-                        "required"
+                        {
+                            "type": "required",
+                            "message": "The user's full name is required"
+                        }
                     ],
                     "label": "Full Name",
-                    "isTableField": true
+                    "displayOnForm": true,
+                    "displayOnTable": true
+                },
+                {
+                    "property": "password",
+                    "type": "text",
+                    "validation": [
+                        {
+                            "type": "required",
+                            "message": "The user's password is required"
+                        }
+                    ],
+                    "label": "Password",
+                    "displayOnForm": true,
+                    "displayOnTable": false
                 },
                 {
                     "property": "roles",
                     "type": "multiselect",
                     "validation": [],
                     "label": "Roles",
-                    "isTableField": true
-                }
-            ],
-            "actionLinks": [
-                {
-                    "label": "View",
-                    "url": "application.admin.collections.view"
+                    "displayOnForm": false,
+                    "displayOnTable": false
                 },
                 {
-                    "label": "Edit",
-                    "url": "application.admin.collections.edit"
-                },
-                {
-                    "label": "Delete",
-                    "url": "application.admin.collections.delete"
+                    "property": "__origin",
+                    "label": "Created",
+                    "displayOnForm": false,
+                    "displayOnTable": true
                 }
             ]
         }

@@ -6,7 +6,8 @@ use \Fire\Studio\BaseComponent;
 use \Fire\Studio;
 use \Fire\Studio\Form;
 
-abstract class Controller extends BaseComponent {
+abstract class Controller extends BaseComponent
+{
 
     const FIRESTUDIO_PAGE_CONTENT = 'fire.studio.page.content';
     const FIRESTUDIO_PAGE_SIDEBAR = 'fire.studio.page.sidebar';

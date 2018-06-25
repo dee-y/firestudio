@@ -54,6 +54,8 @@ class Form
 
     private $_fieldErrorMap;
 
+    private $_fieldIds;
+
     public function __construct($formDataObj)
     {
         DataMapper::mapDataToObject($this, $formDataObj);
@@ -64,6 +66,7 @@ class Form
             __DIR__ . self::CONFIG_FORM_ERROR_CODES
         );
         $this->_fieldErrorMap = [];
+        $this->_fieldIds = array_keys((array) $formDataObj);
     }
 
     public function fieldValidation($fieldName, $validation, $errorMessage)
@@ -104,4 +107,8 @@ class Form
         return $cleanedErrors;
     }
 
+    public function getFieldIds()
+    {
+        return $this->_fieldIds;
+    }
 }

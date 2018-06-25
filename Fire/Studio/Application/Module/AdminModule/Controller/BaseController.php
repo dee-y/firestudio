@@ -20,7 +20,7 @@ abstract class BaseController extends Controller
     {
         $this->_notFound = true;
         $this->setResponceCode(404);
-        $this->setPageTemplate(__DIR__ . '/../Template/admin/notFound.phtml');
+        $this->setPageTemplate(__DIR__ . '/../Template/admin/not-found.phtml');
     }
 
     protected function _isPageFound()

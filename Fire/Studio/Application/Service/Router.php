@@ -41,9 +41,13 @@ class Router {
     public function getUrl($id, $params = [])
     {
         $paramKeys = array_keys($params);
+        $replaceKeys = [];
+        foreach ($paramKeys as $key) {
+            $replaceKeys[] = ':' . $key;
+        }
         foreach ($this->_routes as $path => $route) {
             if ($id === $route->id) {
-                return str_replace($paramKeys, $params, $path);
+                return str_replace($replaceKeys, $params, $path);
             }
         }
         return false;
@@ -109,7 +113,7 @@ class Router {
         return $this->_id;
     }
 
-    public function getVariables($routeParam = null)
+    public function getParams($routeParam = null)
     {
         if ($routeParam) {
             if (isset($this->_routeVars[$routeParam])) {
@@ -137,10 +141,10 @@ class Router {
         $routeConfig = $this->_routes;
         $requestUri = $_SERVER['REQUEST_URI'];
         //remove ? from the route matching equation
-        $route = (strpos($requestUri, '?') !== false) 
+        $route = (strpos($requestUri, '?') !== false)
             ? substr($requestUri, 0, strpos($requestUri, '?')) : $requestUri;
         //remove trailing / from the route matching equation
-        $currentRoute = substr($route, -1) === '/' 
+        $currentRoute = substr($route, -1) === '/'
             ? substr($route, 0, -1) : $route;
         if (array_key_exists($currentRoute, $routeConfig)) {
             $this->_matchedRoute = $currentRoute;

@@ -1,0 +1,16 @@
+{{#newObjForm}}
+<div class="admin-section">
+<h1>New {{singularName}}</h1>
+    <form class="admin-form" method="post">
+        <div class="fields">
+            {{#fields}}
+            {{{.}}}
+            {{/fields}}
+            <input class="btn save-btn admin-btn" type="submit" value="Save">
+            <a href="{{collectionUrl}}" class="btn admin-btn">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+{{/newObjForm}}

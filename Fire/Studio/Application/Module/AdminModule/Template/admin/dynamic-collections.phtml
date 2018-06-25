@@ -1,7 +1,7 @@
-{{#adminDataPanel}}
+{{#dynamicCollection}}
 <div class="admin-data-panel">
     <h1 class="title">Manage {{pluralName}}
-        <span class="btn new-btn">New {{singularName}}</span>
+        <a class="btn new-btn" href="{{newObjectUrl}}">New {{singularName}}</a>
     </h1>
     {{#searchAvailable}}
     <form class="row search-form">
@@ -38,7 +38,7 @@
             </nav>
             {{/pageNav}}
             {{#hasTableData}}
-            <span class="item-count">{{totalCount}} {{singularName}}</span>
+            <span class="item-count">{{totalCount}} {{numCountName}}</span>
             {{/hasTableData}}
         </div>
     </div>
@@ -57,13 +57,13 @@
                 {{#.}}
                 <td>
                     {{value}}
-                    {{#hasActionLinks}}
+                    {{#actionLinks}}
                     <span class="action-links">
-                        {{#actionLinks}}
-                        {{#.}}<a href="#">{{label}}</a> |{{/.}}
-                        {{/actionLinks}}
+                        <a href="{{view}}">View</a> |
+                        <a href="{{edit}}">Edit</a> |
+                        <a href="{{delete}}">Delete</a>
                     </span>
-                    {{/hasActionLinks}}
+                    {{/actionLinks}}
                 </td>
                 {{/.}}
             </tr>
@@ -72,7 +72,7 @@
     </table>
     {{/hasTableData}}
     {{^hasTableData}}
-    <p>No objects found...</p>
+    <p>No data found...</p>
     {{/hasTableData}}
 </div>
-{{/adminDataPanel}}
+{{/dynamicCollection}}
