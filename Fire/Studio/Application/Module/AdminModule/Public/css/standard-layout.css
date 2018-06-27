@@ -62,6 +62,29 @@ input.form-control {
     font-weight: bold;
 }
 
+.sessionMessage {
+    background: #eef163;
+    border: 1px solid #ccd454;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+}
+
+.sessionMessage p {
+    margin-bottom: 0;
+}
+
+.sessionErrors {
+    background: #ffa899;
+    border: 1px solid #d06464;
+    padding: 10px 10px 10px 0;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.sessionErrors ul {
+    margin-bottom: 0;
+}
+
 .admin-wrapper {
     height: 100%;
     position: relative;

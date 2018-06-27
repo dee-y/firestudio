@@ -1,5 +1,9 @@
-{{#sessionErrors}}
-    <ul class="sessionErrors">
-    {{#.}}<li>{{.}}</li>{{/.}}
+{{#hasSessionErrors}}
+<div class="sessionErrors">
+    <ul>
+        {{#sessionErrors}}
+        {{#.}}<li>{{.}}</li>{{/.}}
+        {{/sessionErrors}}
     </ul>
-{{/sessionErrors}}
+</div>
+{{/hasSessionErrors}}

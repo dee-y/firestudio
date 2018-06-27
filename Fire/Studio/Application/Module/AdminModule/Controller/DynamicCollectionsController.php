@@ -67,6 +67,8 @@ class DynamicCollectionsController extends BaseController
     {
         if ($this->_isPageFound()) {
             $collectionSlug = $this->_dynamicCollectionsHelper->getSlug();
+            $singularName = $this->_dynamicCollectionsHelper->getSingularName();
+            $pluralName = $this->_dynamicCollectionsHelper->getPluralName();
             $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
             $collectionFieldsConfig = $config->collections->{$collectionSlug}->fields;
             $fieldsMap = (object) [];
@@ -86,10 +88,14 @@ class DynamicCollectionsController extends BaseController
             if ($form->isValid()) {
                 $collection = $this->_dynamicCollectionsHelper->getCollection();
                 $collection->insert($form);
-                $this->setSessionMessage('Your new object was added!');
+                $sessionMessage = 'The new ' . $singularName . ' object was successfully added to your ' . 
+                    $pluralName . ' collection.';
+                $this->setSessionMessage($sessionMessage);
                 $this->redirectToUrl($this->_dynamicCollectionsHelper->getCollectionUrl());
             } else {
-                $this->setSessionMessage('There was a problem creating your object!');
+                $sessionMessage = 'There was a problem adding the new ' . $singularName .
+                    ' to your ' . $pluralName . ' collection.';
+                $this->setSessionMessage($sessionMessage);
             }
         }
         $this->redirectToUrl($this->_dynamicCollectionsHelper->getNewObjUrl());

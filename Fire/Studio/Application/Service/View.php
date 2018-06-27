@@ -147,6 +147,7 @@ class View
 
         $this->model->sessionMessage = Studio::$sessionMessage;
         $this->model->sessionErrors = Studio::$sessionErrors;
+        $this->model->hasSessionErrors = !empty(Studio::$sessionErrors);
         $this->model->sessionForm = Studio::$sessionForm;
         $this->model->debugPanel = $this->_debug->render();
         $mustacheTemplate = $this->getTemplate($templateId);

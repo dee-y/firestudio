@@ -17,6 +17,7 @@ class DynamicCollectionsHelper extends ControllerHelper
     private $_collection;
     private $_slug;
     private $_id;
+    private $_collectionName;
     private $_singularName;
     private $_pluralName;
     private $_fields;
@@ -38,6 +39,7 @@ class DynamicCollectionsHelper extends ControllerHelper
         $this->_slug = $urlSlug;
         $this->_id = $objId;
         $this->_collection = $db->collection($collectionName);
+        $this->_collectionName = $collectionName;
         $this->_singularName = $singularName;
         $this->_pluralName = $pluralName;
         $this->_fields = $fields;
@@ -68,6 +70,21 @@ class DynamicCollectionsHelper extends ControllerHelper
     public function getNewObjUrl()
     {
         return $this->_newObjUrl;
+    }
+
+    public function getCollectionName()
+    {
+        return $this->_collectionName;
+    }
+
+    public function getSingularName()
+    {
+        return $this->_singularName;
+    }
+
+    public function getPluralName()
+    {
+        return $this->_pluralName;
     }
 
     public function getDynamicCollectionModel($currentPage, $numPerPage)
