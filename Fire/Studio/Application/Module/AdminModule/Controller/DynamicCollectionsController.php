@@ -66,10 +66,10 @@ class DynamicCollectionsController extends BaseController
     public function newObjPOST()
     {
         if ($this->_isPageFound()) {
+            $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
             $collectionSlug = $this->_dynamicCollectionsHelper->getSlug();
             $singularName = $this->_dynamicCollectionsHelper->getSingularName();
-            $pluralName = $this->_dynamicCollectionsHelper->getPluralName();
-            $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+            $collectionName = $this->_dynamicCollectionsHelper->getCollectionName();
             $collectionFieldsConfig = $config->collections->{$collectionSlug}->fields;
             $fieldsMap = (object) [];
             foreach ($collectionFieldsConfig as $field) {
@@ -87,14 +87,14 @@ class DynamicCollectionsController extends BaseController
 
             if ($form->isValid()) {
                 $collection = $this->_dynamicCollectionsHelper->getCollection();
-                $collection->insert($form);
-                $sessionMessage = 'The new ' . $singularName . ' object was successfully added to your ' . 
-                    $pluralName . ' collection.';
+                $obj = $collection->insert($form);
+                $sessionMessage = 'The new ' . $singularName . ' object was successfully added to the ' .
+                    $collectionName . ' collection and was assigned ID ' . $obj->__id . '.';
                 $this->setSessionMessage($sessionMessage);
                 $this->redirectToUrl($this->_dynamicCollectionsHelper->getCollectionUrl());
             } else {
                 $sessionMessage = 'There was a problem adding the new ' . $singularName .
-                    ' to your ' . $pluralName . ' collection.';
+                    ' to the ' . $collectionName . ' collection.';
                 $this->setSessionMessage($sessionMessage);
             }
         }
@@ -103,12 +103,67 @@ class DynamicCollectionsController extends BaseController
 
     public function viewObj()
     {
+        if ($this->_isPageFound()) {
+            $this->model->viewObj = $this->_dynamicCollectionsHelper
+                ->getViewObjModel();
+
+
+            $this->addInlineStyle(
+                self::STYLE_ADMIN_DYNAMIC_COLLECTIONS,
+                __DIR__ . '/../../AdminModule/Public/css/admin/dynamic-collections.css'
+            );
+            $this->setPageTemplate(__DIR__ . '/../Template/admin/dynamic-collections-view.phtml');
+        }
         echo $this->renderHtml();
     }
 
     public function editObj()
     {
+        if ($this->_isPageFound()) {
+            $this->model->editObjForm = $this->_dynamicCollectionsHelper
+                ->getEditObjFormModel();
+            $this->setPageTemplate(__DIR__ . '/../Template/admin/dynamic-collections-edit.phtml');
+        }
         echo $this->renderHtml();
+    }
+
+    public function editObjPOST()
+    {
+        if ($this->_isPageFound()) {
+            $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+            $collectionSlug = $this->_dynamicCollectionsHelper->getSlug();
+            $singularName = $this->_dynamicCollectionsHelper->getSingularName();
+            $collectionName = $this->_dynamicCollectionsHelper->getCollectionName();
+            $id = $this->_dynamicCollectionsHelper->getId();
+            $collectionFieldsConfig = $config->collections->{$collectionSlug}->fields;
+            $fieldsMap = (object) [];
+            foreach ($collectionFieldsConfig as $field) {
+                $fieldsMap->{$field->property} = $field;
+            }
+
+            $form = $this->getFormPost();
+            $formFieldIds = $form->getFieldIds();
+            foreach($formFieldIds as $fieldId) {
+                $validations = $fieldsMap->{$fieldId}->validation;
+                foreach($validations as $validation) {
+                    $form->fieldValidation($fieldId, $validation->type, $validation->message);
+                }
+            }
+
+            if ($form->isValid()) {
+                $collection = $this->_dynamicCollectionsHelper->getCollection();
+                $collection->update($id, $form);
+                $sessionMessage = 'The ' . $singularName . ' object ' . $id . ' was successfully updated in the ' .
+                    $collectionName . ' collection.';
+                $this->setSessionMessage($sessionMessage);
+                $this->redirectToUrl($this->_dynamicCollectionsHelper->getCollectionUrl());
+            } else {
+                $sessionMessage = 'There was a problem editing the ' . $singularName .
+                    ' object ' . $id . ' in the ' . $collectionName . ' collection.';
+                $this->setSessionMessage($sessionMessage);
+            }
+        }
+        $this->redirectToUrl($this->_dynamicCollectionsHelper->getEditObjUrl());
     }
 
     public function deleteObj()
@@ -124,9 +179,13 @@ class DynamicCollectionsController extends BaseController
     public function deleteObjPOST()
     {
         if ($this->_isPageFound()) {
+            $collectionName = $this->_dynamicCollectionsHelper->getCollectionName();
+            $singularName = $this->_dynamicCollectionsHelper->getSingularName();
             $collection = $this->_dynamicCollectionsHelper->getCollection();
             $form = $this->getFormPost();
             $collection->delete($form->objectId);
+            $this->setSessionMessage('The ' . $singularName . ' object ' . $form->objectId . ' was successfully deleted from your ' .
+                $collectionName . ' collection.');
         }
         $this->redirectToUrl($this->_dynamicCollectionsHelper->getCollectionUrl());
     }

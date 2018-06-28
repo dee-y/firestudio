@@ -1,0 +1,32 @@
+{{#viewObj}}
+<div class="admin-data-panel">
+<div class="title">
+<h1>
+    {{singularName}} Object
+    <a href="#" class="btn admin-btn" style="font-weight:bold;margin: 0 0 0 10px;">Edit</a>
+    <a href="#" class="btn admin-btn" style="font-weight:bold;margin: 0;">Delete</a>
+</h1>
+<h5>id: {{id}}</h5>
+</div>
+<table class="table data-table table-striped">
+    <thead>
+        <tr>
+            {{#tableHeadings}}
+            <th>{{.}}</th>
+            {{/tableHeadings}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#table}}
+        <tr>
+            {{#.}}
+            <td>
+                {{.}}
+            </td>
+            {{/.}}
+        </tr>
+        {{/table}}
+    </tbody>
+</table>
+</div>
+{{/viewObj}}

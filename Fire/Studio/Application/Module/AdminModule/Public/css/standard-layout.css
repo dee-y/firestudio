@@ -258,7 +258,7 @@ input.form-control {
     background: #e1ebf5;
     border: 1px solid #94a7b9;
     color: #495057;
-    padding: 30px 30px 20px 30px;
+    padding: 30px;
     margin-bottom: 20px;
 }
 
@@ -266,12 +266,22 @@ input.form-control {
     font-weight: bold;
 }
 
+.admin-form .fields .checkbox-input {
+    background: #fff;
+    border: 1px solid #ced5db;
+    padding: 13px 15px;
+}
+
+.admin-form .fields .checkbox-input label {
+    font-weight: normal;
+}
+
 .btn.admin-btn {
     background-color: #3c8dbc;
     color: #fff;
     border: 1px solid #377fa9;
-    font-size: 18px;
-    padding: 8px 18px 5px 18px;
+    font-size: 15px;
+    padding: 8px 18px;
     margin-right: 5px;
     border-radius: 0;
 }

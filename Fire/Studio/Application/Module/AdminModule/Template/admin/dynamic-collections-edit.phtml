@@ -1,0 +1,12 @@
+{{#editObjForm}}
+<h1>New {{singularName}}</h1>
+<form class="admin-form" method="post">
+    <div class="fields">
+        {{#fields}}
+        {{{.}}}
+        {{/fields}}
+    </div>
+    <input class="btn save-btn admin-btn" type="submit" value="Save">
+    <a href="{{collectionUrl}}" class="btn admin-btn">Cancel</a>
+</form>
+{{/editObjForm}}

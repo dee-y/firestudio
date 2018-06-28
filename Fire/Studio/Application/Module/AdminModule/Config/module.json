@@ -31,7 +31,7 @@
             ]
         },
         "application.admin.dynamicCollections": {
-            "path": "/admin/dc/:collectionSlug",
+            "path": "/admin/c/:collectionSlug",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
             "action": "index",
@@ -40,7 +40,7 @@
             ]
         },
         "application.admin.dynamicCollections.new": {
-            "path": "/admin/dc/:collectionSlug/new",
+            "path": "/admin/c/:collectionSlug/new",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
             "action": "newObj",
@@ -49,7 +49,7 @@
             ]
         },
         "application.admin.dynamicCollections.view": {
-            "path": "/admin/dc/:collectionSlug/view/:objectId",
+            "path": "/admin/c/:collectionSlug/view/:objectId",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
             "action": "viewObj",
@@ -58,7 +58,7 @@
             ]
         },
         "application.admin.dynamicCollections.edit": {
-            "path": "/admin/dc/:collectionSlug/edit/:objectId",
+            "path": "/admin/c/:collectionSlug/edit/:objectId",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
             "action": "editObj",
@@ -67,7 +67,7 @@
             ]
         },
         "application.admin.dynamicCollections.delete": {
-            "path": "/admin/dc/:collectionSlug/delete/:objectId",
+            "path": "/admin/c/:collectionSlug/delete/:objectId",
             "module": "Fire\\Studio\\Application\\Module\\AdminModule",
             "controller": "Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\DynamicCollectionsController",
             "action": "deleteObj",

@@ -13,6 +13,7 @@ class DynamicCollectionsHelper extends ControllerHelper
     use \Fire\Studio\Injector;
 
     const PARTIAL_FORM_TEXT_INPUT = 'admin.form.textInput';
+    const PARTIAL_FORM_MULTISELECT_INPUT = 'admin.form.multiselectInput';
 
     private $_collection;
     private $_slug;
@@ -72,6 +73,11 @@ class DynamicCollectionsHelper extends ControllerHelper
         return $this->_newObjUrl;
     }
 
+    public function getEditObjUrl()
+    {
+        return $this->_editObjUrl;
+    }
+
     public function getCollectionName()
     {
         return $this->_collectionName;
@@ -119,7 +125,18 @@ class DynamicCollectionsHelper extends ControllerHelper
             'totalCount' => $totalCount,
             'hasTableData' => count($collectionData) > 0,
             'tableHeadings' => array_values($fieldMapping),
-            'table' => $this->_prepareTableData($collectionData)
+            'table' => $this->_prepareCollectionTableData($collectionData)
+        ];
+    }
+
+    public function getViewObjModel()
+    {
+        $obj = $this->_collection->find($this->_id);
+        return (object) [
+            'singularName' => $this->_singularName,
+            'id' => $this->_id,
+            'tableHeadings' => ['Property', 'Type', 'Value'],
+            'table' => $this->_prepareObjectTableData($obj)
         ];
     }
 
@@ -129,7 +146,7 @@ class DynamicCollectionsHelper extends ControllerHelper
             'singularName' => $this->_singularName,
             'pluralName' => $this->_pluralName,
             'collectionUrl' => $this->_collectionUrl,
-            'fields' => $this->_prepareFormFields(true)
+            'fields' => $this->_prepareFormFields()
         ];
     }
 
@@ -137,10 +154,22 @@ class DynamicCollectionsHelper extends ControllerHelper
     {
         return (object) [
             'singularName' => $this->_singularName,
+            'collectionName' => $this->_collectionName,
             'collectionsUrl' => $this->_collectionUrl,
             'id' => $this->_id
         ];
     }
+
+    public function getEditObjFormModel()
+    {
+        return (object) [
+            'singularName' => $this->_singularName,
+            'pluralName' => $this->_pluralName,
+            'collectionUrl' => $this->_collectionUrl,
+            'fields' => $this->_prepareFormFields()
+        ];
+    }
+
 
     private function _setupUrls()
     {
@@ -186,6 +215,10 @@ class DynamicCollectionsHelper extends ControllerHelper
             self::PARTIAL_FORM_TEXT_INPUT,
             __DIR__ . '/../../Template/admin/form/text-input.phtml'
         );
+        $this->loadPartial(
+            self::PARTIAL_FORM_MULTISELECT_INPUT,
+            __DIR__ . '/../../Template/admin/form/multiselect-input.phtml'
+        );
     }
 
     private function _getFieldMapping()
@@ -203,7 +236,7 @@ class DynamicCollectionsHelper extends ControllerHelper
         return $fieldMapping;
     }
 
-    private function _prepareTableData($collectionData)
+    private function _prepareCollectionTableData($collectionData)
     {
         $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
         $tableData = [];
@@ -213,10 +246,8 @@ class DynamicCollectionsHelper extends ControllerHelper
             $i = 0;
             foreach ($this->_fields as $field) {
                 if ($field->displayOnTable) {
-                    $data = isset($obj->{$field->property}) ? $obj->{$field->property} : false;
-                    if (is_array($data)) {
-                        $data = implode(', ', $data);
-                    }
+                    $field->value = isset($obj->{$field->property}) ? $obj->{$field->property} : false;
+                    $data = $this->_renderTableField($field);
                     $tableRow[$i] = (object) [
                         'value' => !empty($data) ? $data : 'none',
                         'actionLinks' => false
@@ -255,21 +286,57 @@ class DynamicCollectionsHelper extends ControllerHelper
         return $tableData;
     }
 
-    private function _prepareFormFields($isForForm = false)
+    private function _prepareObjectTableData($obj)
     {
-        $fieldValues = $this->getSessionForm();
+        $tableData = [];
+        foreach ($this->_fields as $field) {
+            $tableData[] = [
+                $field->property,
+                $field->type,
+                $obj->{$field->property}
+            ];
+        }
+        return $tableData;
+    }
+
+    private function _prepareFormFields()
+    {
+        $sessionValues = $this->getSessionForm();
+        $obj = $this->_collection->find($this->_id);
         $fields = [];
         foreach ($this->_fields as $field) {
-            $field->value = isset($fieldValues->{$field->property})
-                ? $fieldValues->{$field->property} : '';
-            if ($isForForm && $field->displayOnForm) {
-                $fields[] = $this->_renderField($field);
+            //set field value from object in database if it exists
+            $field->value = isset($obj->{$field->property})
+                ? $obj->{$field->property}
+                : '';
+            //override the field value by the form session
+            if (isset($sessionValues->{$field->property})) {
+                $field->value = $sessionValues->{$field->property};
+            }
+            if ($field->displayOnForm) {
+                $fields[] = $this->_renderFormField($field);
             }
         }
         return $fields;
     }
 
-    private function _renderField($field)
+    private function _renderTableField($field)
+    {
+        switch($field->type) {
+            case 'text':
+                return $field->value;
+            break;
+            case 'multiselect':
+                return implode(', ', $field->value);
+            break;
+            case 'date':
+                $timestamp = strtotime($field->value);
+                return date('m/d/Y H:i:s', $timestamp);
+            break;
+        }
+    }
+
+    private function _renderFormField($field)
     {
         switch($field->type) {
             case 'text':
@@ -277,7 +344,26 @@ class DynamicCollectionsHelper extends ControllerHelper
                     self::PARTIAL_FORM_TEXT_INPUT,
                     $field
                 );
-                break;
+            break;
+            case 'multiselect':
+                foreach ($field->options as $option) {
+                    if (
+                        is_array($field->value)
+                        && in_array($option->value, $field->value)
+                    ) {
+                        $option->selected = true;
+                    } elseif (
+                        !empty($field->value)
+                        && $option->value === $field->value
+                    ) {
+                        $option->selected = true;
+                    }
+                }
+                return $this->renderPartial(
+                    self::PARTIAL_FORM_MULTISELECT_INPUT,
+                    $field
+                );
+            break;
         }
     }
 
