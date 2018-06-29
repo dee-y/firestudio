@@ -9,17 +9,6 @@
     margin-bottom: 20px;
 }
 
-.admin-data-panel .title .new-btn {
-    background-color: #3c8dbc;
-    color: #fff;
-    border: 1px solid #377fa9;
-    font-size: 14px;
-    padding: 8px 10px 5px 10px;
-    font-weight: bold;
-    margin-left: 3px;
-    border-radius: 0;
-}
-
 .admin-data-panel .search-form {
     margin-bottom: 5px;
 }

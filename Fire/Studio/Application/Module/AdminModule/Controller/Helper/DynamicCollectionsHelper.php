@@ -133,6 +133,9 @@ class DynamicCollectionsHelper extends ControllerHelper
     {
         $obj = $this->_collection->find($this->_id);
         return (object) [
+            'collectionUrl' => $this->_collectionUrl,
+            'editObjUrl' => $this->_editObjUrl,
+            'deleteObjUrl' => $this->_deleteObjUrl,
             'singularName' => $this->_singularName,
             'id' => $this->_id,
             'tableHeadings' => ['Property', 'Type', 'Value'],
@@ -170,6 +173,21 @@ class DynamicCollectionsHelper extends ControllerHelper
         ];
     }
 
+    public function upsertObject($obj, $id = null)
+    {
+        foreach ($this->_fields as $field) {
+            if ($field->displayOnForm) {
+                $field->value = $obj->{$field->property};
+                $obj->{$field->property} = $this->_prepareFieldValue($field);
+            }
+        }
+
+        if ($id) {
+            return $this->_collection->update($id, $obj);
+        } else {
+            return $this->_collection->insert($obj);
+        }
+    }
 
     private function _setupUrls()
     {
@@ -290,10 +308,11 @@ class DynamicCollectionsHelper extends ControllerHelper
     {
         $tableData = [];
         foreach ($this->_fields as $field) {
+            $field->value = $obj->{$field->property};
             $tableData[] = [
                 $field->property,
                 $field->type,
-                $obj->{$field->property}
+                $this->_renderTableField($field)
             ];
         }
         return $tableData;
@@ -318,6 +337,23 @@ class DynamicCollectionsHelper extends ControllerHelper
             }
         }
         return $fields;
+    }
+
+    private function _prepareFieldValue($field)
+    {
+        switch($field->type) {
+            case 'multiselect':
+                if (is_array($field->value)) {
+                    return $field->value;
+                } elseif (!empty($field->value)) {
+                    return [$field->value];
+                }
+                return [];
+            break;
+            default:
+                return $field->value;
+            break;
+        }
     }
 
     private function _renderTableField($field)

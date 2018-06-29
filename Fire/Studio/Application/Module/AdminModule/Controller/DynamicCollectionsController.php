@@ -86,8 +86,7 @@ class DynamicCollectionsController extends BaseController
             }
 
             if ($form->isValid()) {
-                $collection = $this->_dynamicCollectionsHelper->getCollection();
-                $obj = $collection->insert($form);
+                $obj = $this->_dynamicCollectionsHelper->upsertObject($form);
                 $sessionMessage = 'The new ' . $singularName . ' object was successfully added to the ' .
                     $collectionName . ' collection and was assigned ID ' . $obj->__id . '.';
                 $this->setSessionMessage($sessionMessage);
@@ -151,8 +150,7 @@ class DynamicCollectionsController extends BaseController
             }
 
             if ($form->isValid()) {
-                $collection = $this->_dynamicCollectionsHelper->getCollection();
-                $collection->update($id, $form);
+                $this->_dynamicCollectionsHelper->upsertObject($form, $id);
                 $sessionMessage = 'The ' . $singularName . ' object ' . $id . ' was successfully updated in the ' .
                     $collectionName . ' collection.';
                 $this->setSessionMessage($sessionMessage);

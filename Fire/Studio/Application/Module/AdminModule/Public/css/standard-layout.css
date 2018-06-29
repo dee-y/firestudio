@@ -281,7 +281,8 @@ input.form-control {
     color: #fff;
     border: 1px solid #377fa9;
     font-size: 15px;
-    padding: 8px 18px;
-    margin-right: 5px;
+    padding: 10px;
+    font-weight: bold;
     border-radius: 0;
+    line-height: 1;
 }
