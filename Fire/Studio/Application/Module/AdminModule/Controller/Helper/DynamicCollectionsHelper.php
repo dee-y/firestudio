@@ -13,6 +13,7 @@ class DynamicCollectionsHelper extends ControllerHelper
     use \Fire\Studio\Injector;
 
     const PARTIAL_FORM_TEXT_INPUT = 'admin.form.textInput';
+    const PARTIAL_FORM_PASSWORD_INPUT = 'admin.form.passwordInput';
     const PARTIAL_FORM_MULTISELECT_INPUT = 'admin.form.multiselectInput';
 
     private $_collection;
@@ -234,6 +235,10 @@ class DynamicCollectionsHelper extends ControllerHelper
             __DIR__ . '/../../Template/admin/form/text-input.phtml'
         );
         $this->loadPartial(
+            self::PARTIAL_FORM_PASSWORD_INPUT,
+            __DIR__ . '/../../Template/admin/form/password-input.phtml'
+        );
+        $this->loadPartial(
             self::PARTIAL_FORM_MULTISELECT_INPUT,
             __DIR__ . '/../../Template/admin/form/multiselect-input.phtml'
         );
@@ -342,6 +347,9 @@ class DynamicCollectionsHelper extends ControllerHelper
     private function _prepareFieldValue($field)
     {
         switch($field->type) {
+            case 'password':
+                return password_hash($field->value, PASSWORD_DEFAULT);
+            break;
             case 'multiselect':
                 if (is_array($field->value)) {
                     return $field->value;
@@ -362,6 +370,9 @@ class DynamicCollectionsHelper extends ControllerHelper
             case 'text':
                 return $field->value;
             break;
+            case 'password':
+                return '***************';
+            break;
             case 'multiselect':
                 return implode(', ', $field->value);
             break;
@@ -378,6 +389,12 @@ class DynamicCollectionsHelper extends ControllerHelper
             case 'text':
                 return $this->renderPartial(
                     self::PARTIAL_FORM_TEXT_INPUT,
+                    $field
+                );
+            break;
+            case 'password':
+                return $this->renderPartial(
+                    self::PARTIAL_FORM_PASSWORD_INPUT,
                     $field
                 );
             break;
