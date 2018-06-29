@@ -12,8 +12,12 @@ class DynamicCollectionsHelper extends ControllerHelper
 {
     use \Fire\Studio\Injector;
 
+    const VALUE_EMPTY = 'none';
+
     const PARTIAL_FORM_TEXT_INPUT = 'admin.form.textInput';
     const PARTIAL_FORM_PASSWORD_INPUT = 'admin.form.passwordInput';
+    const PARTIAL_FORM_TEXTAREA_INPUT = 'admin.form.textareaInput';
+    const PARTIAL_FORM_SELECT_INPUT = 'admin.form.selectInput';
     const PARTIAL_FORM_MULTISELECT_INPUT = 'admin.form.multiselectInput';
 
     private $_collection;
@@ -139,7 +143,7 @@ class DynamicCollectionsHelper extends ControllerHelper
             'deleteObjUrl' => $this->_deleteObjUrl,
             'singularName' => $this->_singularName,
             'id' => $this->_id,
-            'tableHeadings' => ['Property', 'Type', 'Value'],
+            'tableHeadings' => ['Label', 'Property', 'Type', 'Value'],
             'table' => $this->_prepareObjectTableData($obj)
         ];
     }
@@ -239,6 +243,14 @@ class DynamicCollectionsHelper extends ControllerHelper
             __DIR__ . '/../../Template/admin/form/password-input.phtml'
         );
         $this->loadPartial(
+            self::PARTIAL_FORM_TEXTAREA_INPUT,
+            __DIR__ . '/../../Template/admin/form/textarea-input.phtml'
+        );
+        $this->loadPartial(
+            self::PARTIAL_FORM_SELECT_INPUT,
+            __DIR__ . '/../../Template/admin/form/select-input.phtml'
+        );
+        $this->loadPartial(
             self::PARTIAL_FORM_MULTISELECT_INPUT,
             __DIR__ . '/../../Template/admin/form/multiselect-input.phtml'
         );
@@ -272,7 +284,7 @@ class DynamicCollectionsHelper extends ControllerHelper
                     $field->value = isset($obj->{$field->property}) ? $obj->{$field->property} : false;
                     $data = $this->_renderTableField($field);
                     $tableRow[$i] = (object) [
-                        'value' => !empty($data) ? $data : 'none',
+                        'value' => !empty($data) ? $data : self::VALUE_EMPTY,
                         'actionLinks' => false
                     ];
 
@@ -313,11 +325,13 @@ class DynamicCollectionsHelper extends ControllerHelper
     {
         $tableData = [];
         foreach ($this->_fields as $field) {
-            $field->value = $obj->{$field->property};
+            $field->value = isset($obj->{$field->property}) ? $obj->{$field->property} : '';
+            $data = $this->_renderTableField($field);
             $tableData[] = [
+                $field->label,
                 $field->property,
                 $field->type,
-                $this->_renderTableField($field)
+                !empty($data) ? $data : self::VALUE_EMPTY
             ];
         }
         return $tableData;
@@ -367,9 +381,6 @@ class DynamicCollectionsHelper extends ControllerHelper
     private function _renderTableField($field)
     {
         switch($field->type) {
-            case 'text':
-                return $field->value;
-            break;
             case 'password':
                 return '***************';
             break;
@@ -378,8 +389,13 @@ class DynamicCollectionsHelper extends ControllerHelper
             break;
             case 'date':
                 $timestamp = strtotime($field->value);
-                return date('m/d/Y H:i:s', $timestamp);
+                return date('Y-m-d H:i:s', $timestamp);
             break;
+            case 'relationship':
+                return $this->_renderRelationshipTableField($field);
+            break;
+            default:
+                return $field->value;
         }
     }
 
@@ -395,6 +411,12 @@ class DynamicCollectionsHelper extends ControllerHelper
             case 'password':
                 return $this->renderPartial(
                     self::PARTIAL_FORM_PASSWORD_INPUT,
+                    $field
+                );
+            break;
+            case 'textarea':
+                return $this->renderPartial(
+                    self::PARTIAL_FORM_TEXTAREA_INPUT,
                     $field
                 );
             break;
@@ -417,7 +439,69 @@ class DynamicCollectionsHelper extends ControllerHelper
                     $field
                 );
             break;
+            case 'relationship':
+                return $this->_renderRelationshipFormField($field);
+            break;
         }
+    }
+
+    private function _renderRelationshipTableField($field)
+    {
+        $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+        $collectionsConfig = $config->collections;
+        $collectionConfigId = $field->config->collection;
+        $collectionProperty = $field->config->property;
+        $collectionName = $collectionsConfig->{$collectionConfigId}->collectionName;
+
+        $db = $this->injector()->get(Studio::INJECTOR_DATABASE);
+        $collection = $db->collection($collectionName);
+        $obj = $collection->find($field->value);
+        if ($obj) {
+            $router = $this->injector()->get(Studio::INJECTOR_ROUTER);
+            $objLink = $router->getUrl(
+                AdminModule::URL_DYNAMIC_COLLECTIONS_VIEW,
+                [
+                    DynamicCollectionsController::ROUTE_VARIABLE_COLLECTION_ID => $collectionConfigId,
+                    DynamicCollectionsController::ROUTE_VARIABLE_OBJECT_ID => $obj->__id
+                ]
+            );
+        }
+
+        return isset($obj->{$collectionProperty}) && $objLink
+            ? '<a href="' . $objLink . '">' . $obj->{$collectionProperty} . '</a>'
+            : self::VALUE_EMPTY;
+    }
+
+    private function _renderRelationshipFormField($field)
+    {
+        $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+        $collectionsConfig = $config->collections;
+        $collectionConfigId = $field->config->collection;
+        $collectionProperty = $field->config->property;
+        $collectionName = $collectionsConfig->{$collectionConfigId}->collectionName;
+
+        $db = $this->injector()->get(Studio::INJECTOR_DATABASE);
+        $collection = $db->collection($collectionName);
+
+        $filter = new Filter();
+        $filter->orderBy($collectionProperty);
+        $filter->reverse(false);
+        $filter->length(1000);
+        $objects = $collection->find($filter);
+
+        $field->options = [];
+        foreach ($objects as $obj) {
+            $field->options[] = (object) [
+                'value' => $obj->__id,
+                'label' => $obj->{$collectionProperty},
+                'selected' => $obj->__id === $field->value
+            ];
+        }
+
+        return $this->renderPartial(
+            self::PARTIAL_FORM_SELECT_INPUT,
+            $field
+        );
     }
 
 }

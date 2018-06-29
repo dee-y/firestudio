@@ -12,6 +12,11 @@
 
 a {
     text-decoration: none;
+    color: #4780BE;
+}
+
+a:hover {
+    color: #4173AB
 }
 
 body {

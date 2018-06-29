@@ -6,27 +6,6 @@
             "pluralName": "Users",
             "fields": [
                 {
-                    "property": "__id",
-                    "type": "text",
-                    "label": "ID",
-                    "displayOnForm": false,
-                    "displayOnTable": false
-                },
-                {
-                    "property": "__origin",
-                    "type": "date",
-                    "label": "Created",
-                    "displayOnForm": false,
-                    "displayOnTable": true
-                },
-                {
-                    "property": "__updated",
-                    "type": "date",
-                    "label": "Updated",
-                    "displayOnForm": false,
-                    "displayOnTable": false
-                },
-                {
                     "property": "email",
                     "type": "text",
                     "validation": [
@@ -90,6 +69,27 @@
                     "label": "Roles",
                     "displayOnForm": true,
                     "displayOnTable": true
+                },
+                {
+                    "property": "__id",
+                    "type": "text",
+                    "label": "ID",
+                    "displayOnForm": false,
+                    "displayOnTable": false
+                },
+                {
+                    "property": "__origin",
+                    "type": "date",
+                    "label": "Created",
+                    "displayOnForm": false,
+                    "displayOnTable": true
+                },
+                {
+                    "property": "__updated",
+                    "type": "date",
+                    "label": "Updated",
+                    "displayOnForm": false,
+                    "displayOnTable": false
                 }
             ]
         }

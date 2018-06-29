@@ -1,0 +1,8 @@
+<div class="form-group">
+    <label for="{{property}}">{{label}}</label>
+    <select name="{{property}}" class="custom-select">
+        {{#options}}
+        <option value="{{value}}" {{#selected}} selected{{/selected}}>{{label}}</option>
+        {{/options}}
+    </select>
+</div>
