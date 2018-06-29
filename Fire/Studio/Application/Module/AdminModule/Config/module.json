@@ -3,12 +3,6 @@
         "Fire\\Studio\\Application\\Module\\AdminModule\\Plugin\\AuthenticationPlugin"
     ],
     "routes": {
-        "application.register": {
-            "path": "/register",
-            "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
-            "controller": "Fire\\Studio\\Application\\Module\\ApplicationModule\\Controller\\AuthController",
-            "action": "register"
-        },
         "application.login": {
             "path": "/login",
             "module": "Fire\\Studio\\Application\\Module\\ApplicationModule",
@@ -76,7 +70,97 @@
             ]
         }
     },
-    "collections": {},
+    "dynamicCollections": {
+        "collections": {},
+        "config": {
+            "processors": {
+                "text": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "saveTextField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                },
+                "password": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "savePasswordField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                },
+                "textarea": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "saveTextAreaField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                },
+                "select": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "saveSelectField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                },
+                "multiselect": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "saveMultiSelectField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                },
+                "date": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "saveDateField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                },
+                "onetoone": {
+                    "save": {
+                        "class": "\\Fire\\Studio\\Application\\Module\\AdminModule\\Controller\\Helper\\DynamicCollectionsHelper\\FieldProcessor",
+                        "method": "saveSelectField"
+                    },
+                    "table": {
+
+                    },
+                    "form": {
+
+                    }
+                }
+            }
+        }
+    },
     "roles": [
         "admin",
         "developer",

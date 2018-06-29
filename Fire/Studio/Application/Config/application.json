@@ -6,6 +6,5 @@
         "Fire\\Studio\\Application\\Module\\ApplicationModule"
     ],
     "routes": {},
-    "roles": [],
     "redirects": {}
 }

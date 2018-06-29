@@ -23,11 +23,9 @@ class DynamicCollectionsController extends BaseController
         $objId = $this->getParams(self::ROUTE_VARIABLE_OBJECT_ID);
         $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
 
-        if (
-            $collectionSlug
-            && isset($config->collections->{$collectionSlug})
-        ) {
-            $collectionConfig = $config->collections->{$collectionSlug};
+        $collectionConfig = $this->_getCollectionsConfig($collectionSlug);
+
+        if ($collectionConfig) {
             $this->model->title = 'FireStudio:Admin:' .  $collectionConfig->pluralName;
             $this->_setupDynamicCollectionsHelper($collectionConfig, $collectionSlug, $objId);
         } else {
@@ -70,7 +68,7 @@ class DynamicCollectionsController extends BaseController
             $collectionSlug = $this->_dynamicCollectionsHelper->getSlug();
             $singularName = $this->_dynamicCollectionsHelper->getSingularName();
             $collectionName = $this->_dynamicCollectionsHelper->getCollectionName();
-            $collectionFieldsConfig = $config->collections->{$collectionSlug}->fields;
+            $collectionFieldsConfig = $this->_getCollectionsConfig($collectionSlug)->fields;
             $fieldsMap = (object) [];
             foreach ($collectionFieldsConfig as $field) {
                 $fieldsMap->{$field->property} = $field;
@@ -134,7 +132,7 @@ class DynamicCollectionsController extends BaseController
             $singularName = $this->_dynamicCollectionsHelper->getSingularName();
             $collectionName = $this->_dynamicCollectionsHelper->getCollectionName();
             $id = $this->_dynamicCollectionsHelper->getId();
-            $collectionFieldsConfig = $config->collections->{$collectionSlug}->fields;
+            $collectionFieldsConfig = $this->_getCollectionsConfig($collectionSlug)->fields;
             $fieldsMap = (object) [];
             foreach ($collectionFieldsConfig as $field) {
                 $fieldsMap->{$field->property} = $field;
@@ -196,7 +194,22 @@ class DynamicCollectionsController extends BaseController
             $collectionConfig->collectionName,
             $collectionConfig->singularName,
             $collectionConfig->pluralName,
-            $collectionConfig->fields
+            $collectionConfig->fields,
+            $this->_getDynamicCollectionsConfig()->processors
         );
+    }
+
+    private function _getCollectionsConfig($collectionSlug)
+    {
+        $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+        return isset($config->dynamicCollections->collections->{$collectionSlug})
+         ? $config->dynamicCollections->collections->{$collectionSlug}
+         : false;
+    }
+
+    private function _getDynamicCollectionsConfig()
+    {
+        $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
+        return $config->dynamicCollections->config;
     }
 }

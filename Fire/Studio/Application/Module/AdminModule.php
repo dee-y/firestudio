@@ -36,7 +36,7 @@ class AdminModule extends Module {
 
         //get dynamic collections links
         $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
-        foreach ($config->collections as $slug => $collection) {
+        foreach ($config->dynamicCollections->collections as $slug => $collection) {
             $this->model->adminMenu[] = new MenuItem(
                 $collection->pluralName,
                 self::URL_DYNAMIC_COLLECTIONS,

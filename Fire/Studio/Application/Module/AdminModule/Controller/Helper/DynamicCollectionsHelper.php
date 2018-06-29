@@ -27,6 +27,7 @@ class DynamicCollectionsHelper extends ControllerHelper
     private $_singularName;
     private $_pluralName;
     private $_fields;
+    private $_processors;
     private $_collectionUrl;
     private $_newObjUrl;
     private $_viewObjUrl;
@@ -39,7 +40,8 @@ class DynamicCollectionsHelper extends ControllerHelper
         $collectionName,
         $singularName,
         $pluralName,
-        $fields
+        $fields,
+        $processors
     ) {
         $db = $this->injector()->get(Studio::INJECTOR_DATABASE);
         $this->_slug = $urlSlug;
@@ -49,6 +51,8 @@ class DynamicCollectionsHelper extends ControllerHelper
         $this->_singularName = $singularName;
         $this->_pluralName = $pluralName;
         $this->_fields = $fields;
+        $this->_processors = $processors;
+        $this->_processorCache = [];
         $this->_setupUrls();
         $this->_loadFormPartials();
     }
@@ -360,26 +364,18 @@ class DynamicCollectionsHelper extends ControllerHelper
 
     private function _prepareFieldValue($field)
     {
-        switch($field->type) {
-            case 'password':
-                return password_hash($field->value, PASSWORD_DEFAULT);
-            break;
-            case 'multiselect':
-                if (is_array($field->value)) {
-                    return $field->value;
-                } elseif (!empty($field->value)) {
-                    return [$field->value];
-                }
-                return [];
-            break;
-            default:
-                return $field->value;
-            break;
-        }
+        $processorClass = $this->_processors->{$field->type}->save->class;
+        $processorMethod = $this->_processors->{$field->type}->save->method;
+        $processor = $this->_getFieldProcessor($processorClass);
+        return $processor->{$processorMethod}($field);
     }
 
     private function _renderTableField($field)
     {
+        // $processorClass = $this->_processors->{$field->type}->table->class;
+        // $processorMethod = $this->_processors->{$field->type}->table->method;
+        // $processor = $this->_getFieldProcessor($processorClass);
+        // return $processor->{$processorMethod}($field);
         switch($field->type) {
             case 'password':
                 return '***************';
@@ -391,7 +387,7 @@ class DynamicCollectionsHelper extends ControllerHelper
                 $timestamp = strtotime($field->value);
                 return date('Y-m-d H:i:s', $timestamp);
             break;
-            case 'relationship':
+            case 'onetoone':
                 return $this->_renderRelationshipTableField($field);
             break;
             default:
@@ -401,6 +397,10 @@ class DynamicCollectionsHelper extends ControllerHelper
 
     private function _renderFormField($field)
     {
+        // $processorClass = $this->_processors->{$field->type}->form->class;
+        // $processorMethod = $this->_processors->{$field->type}->form->method;
+        // $processor = $this->_getFieldProcessor($processorClass);
+        // return $processor->{$processorMethod}($field);
         switch($field->type) {
             case 'text':
                 return $this->renderPartial(
@@ -439,7 +439,7 @@ class DynamicCollectionsHelper extends ControllerHelper
                     $field
                 );
             break;
-            case 'relationship':
+            case 'onetoone':
                 return $this->_renderRelationshipFormField($field);
             break;
         }
@@ -448,7 +448,7 @@ class DynamicCollectionsHelper extends ControllerHelper
     private function _renderRelationshipTableField($field)
     {
         $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
-        $collectionsConfig = $config->collections;
+        $collectionsConfig = $config->dynamicCollections->collections;
         $collectionConfigId = $field->config->collection;
         $collectionProperty = $field->config->property;
         $collectionName = $collectionsConfig->{$collectionConfigId}->collectionName;
@@ -475,7 +475,7 @@ class DynamicCollectionsHelper extends ControllerHelper
     private function _renderRelationshipFormField($field)
     {
         $config = $this->injector()->get(Studio::INJECTOR_CONFIG)->getConfig();
-        $collectionsConfig = $config->collections;
+        $collectionsConfig = $config->dynamicCollections->collections;
         $collectionConfigId = $field->config->collection;
         $collectionProperty = $field->config->property;
         $collectionName = $collectionsConfig->{$collectionConfigId}->collectionName;
@@ -502,6 +502,15 @@ class DynamicCollectionsHelper extends ControllerHelper
             self::PARTIAL_FORM_SELECT_INPUT,
             $field
         );
+    }
+
+    private function _getFieldProcessor($processorClass)
+    {
+        if (!isset($this->_processorCache[$processorClass])) {
+            $this->_processorCache[$processorClass] = new $processorClass();
+        }
+
+        return $this->_processorCache[$processorClass];
     }
 
 }

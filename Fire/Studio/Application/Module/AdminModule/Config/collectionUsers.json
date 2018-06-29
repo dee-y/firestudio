@@ -1,97 +1,99 @@
 {
-    "collections": {
-        "users": {
-            "collectionName": "FSUsersCollection",
-            "singularName": "User",
-            "pluralName": "Users",
-            "fields": [
-                {
-                    "property": "email",
-                    "type": "text",
-                    "validation": [
-                        {
-                            "type": "required",
-                            "message": "The user's email address is required"
-                        },
-                        {
-                            "type": "email",
-                            "message": "The user's email address must be valid"
-                        }
-                    ],
-                    "label": "Email Address",
-                    "displayOnForm": true,
-                    "displayOnTable": true
-                },
-                {
-                    "property": "name",
-                    "type": "text",
-                    "validation": [
-                        {
-                            "type": "required",
-                            "message": "The user's full name is required"
-                        }
-                    ],
-                    "label": "Full Name",
-                    "displayOnForm": true,
-                    "displayOnTable": true
-                },
-                {
-                    "property": "password",
-                    "type": "password",
-                    "validation": [
-                        {
-                            "type": "required",
-                            "message": "The user's password is required"
-                        }
-                    ],
-                    "label": "Password",
-                    "displayOnForm": true,
-                    "displayOnTable": false
-                },
-                {
-                    "property": "roles",
-                    "type": "multiselect",
-                    "options": [
-                        {
-                            "label": "User",
-                            "value": "user"
-                        },
-                        {
-                            "label": "Admin",
-                            "value": "admin"
-                        },
-                        {
-                            "label": "Developer",
-                            "value": "developer"
-                        }
-                    ],
-                    "validation": [],
-                    "label": "Roles",
-                    "displayOnForm": true,
-                    "displayOnTable": true
-                },
-                {
-                    "property": "__id",
-                    "type": "text",
-                    "label": "ID",
-                    "displayOnForm": false,
-                    "displayOnTable": false
-                },
-                {
-                    "property": "__origin",
-                    "type": "date",
-                    "label": "Created",
-                    "displayOnForm": false,
-                    "displayOnTable": true
-                },
-                {
-                    "property": "__updated",
-                    "type": "date",
-                    "label": "Updated",
-                    "displayOnForm": false,
-                    "displayOnTable": false
-                }
-            ]
+    "dynamicCollections": {
+        "collections": {
+            "users": {
+                "collectionName": "FSUsersCollection",
+                "singularName": "User",
+                "pluralName": "Users",
+                "fields": [
+                    {
+                        "property": "email",
+                        "type": "text",
+                        "validation": [
+                            {
+                                "type": "required",
+                                "message": "The user's email address is required"
+                            },
+                            {
+                                "type": "email",
+                                "message": "The user's email address must be valid"
+                            }
+                        ],
+                        "label": "Email Address",
+                        "displayOnForm": true,
+                        "displayOnTable": true
+                    },
+                    {
+                        "property": "name",
+                        "type": "text",
+                        "validation": [
+                            {
+                                "type": "required",
+                                "message": "The user's full name is required"
+                            }
+                        ],
+                        "label": "Full Name",
+                        "displayOnForm": true,
+                        "displayOnTable": true
+                    },
+                    {
+                        "property": "password",
+                        "type": "password",
+                        "validation": [
+                            {
+                                "type": "required",
+                                "message": "The user's password is required"
+                            }
+                        ],
+                        "label": "Password",
+                        "displayOnForm": true,
+                        "displayOnTable": false
+                    },
+                    {
+                        "property": "roles",
+                        "type": "multiselect",
+                        "options": [
+                            {
+                                "label": "User",
+                                "value": "user"
+                            },
+                            {
+                                "label": "Admin",
+                                "value": "admin"
+                            },
+                            {
+                                "label": "Developer",
+                                "value": "developer"
+                            }
+                        ],
+                        "validation": [],
+                        "label": "Roles",
+                        "displayOnForm": true,
+                        "displayOnTable": true
+                    },
+                    {
+                        "property": "__id",
+                        "type": "text",
+                        "label": "ID",
+                        "displayOnForm": false,
+                        "displayOnTable": false
+                    },
+                    {
+                        "property": "__origin",
+                        "type": "date",
+                        "label": "Created",
+                        "displayOnForm": false,
+                        "displayOnTable": true
+                    },
+                    {
+                        "property": "__updated",
+                        "type": "date",
+                        "label": "Updated",
+                        "displayOnForm": false,
+                        "displayOnTable": false
+                    }
+                ]
+            }
         }
     }
 }
